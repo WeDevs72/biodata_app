@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EverAfter | Marriage Biodata Maker",
-  description: "Create beautiful marriage biodatas in minutes.",
+  title: "BiodataEarth | Build your identity, your way",
+  description: "Create beautiful marriage biodatas, professional resumes, and business profiles in minutes.",
 };
 
 export default function RootLayout({

@@ -34,7 +34,7 @@ export function LanguageSelector() {
     (window as any).googleTranslateElementInit = () => {
       // Check if the container exists to prevent errors
       if (!document.getElementById("google_translate_element")) return;
-      
+
       // Clear previous instances if any (fixes re-render appending issues)
       const container = document.getElementById("google_translate_element");
       if (container) container.innerHTML = '';
@@ -46,13 +46,13 @@ export function LanguageSelector() {
         },
         "google_translate_element"
       );
-      
+
       // Delay applying the selected language to give the widget time to render
       setTimeout(() => {
         const combo = document.querySelector<HTMLSelectElement>(".goog-te-combo");
         if (combo && combo.value !== lang) {
-            combo.value = lang;
-            combo.dispatchEvent(new Event("change", { bubbles: true }));
+          combo.value = lang;
+          combo.dispatchEvent(new Event("change", { bubbles: true }));
         }
       }, 500);
     };

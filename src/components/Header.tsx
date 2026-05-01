@@ -4,9 +4,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-rose-700 shadow-md notranslate">
       <div className="container mx-auto flex h-16 items-center px-4 md:px-6">
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="font-bold text-2xl text-white">
-            EverAfter
+        <Link href="/" className="flex flex-col items-start justify-center py-1">
+          <span className="font-bold text-2xl text-white leading-none">
+            BiodataEarth
+          </span>
+          <span className="text-[10px] text-rose-100 font-medium uppercase tracking-wider mt-1">
+            Build your identity, your way
           </span>
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-4">

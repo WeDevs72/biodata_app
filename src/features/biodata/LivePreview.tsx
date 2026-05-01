@@ -24,12 +24,12 @@ export function LivePreview({ template }: { template: string }) {
 
   const renderTemplate = (data: Partial<BiodataFormValues>) => {
     switch (template) {
-      case "classic":  return <ClassicTemplate data={data} />;
-      case "modern":   return <ModernTemplate data={data} />;
-      case "minimal":  return <MinimalTemplate data={data} />;
-      case "elegant":  return <ElegantTemplate data={data} />;
-      case "royal":    return <RoyalTemplate data={data} />;
-      default:         return <ClassicTemplate data={data} />;
+      case "classic": return <ClassicTemplate data={data} />;
+      case "modern": return <ModernTemplate data={data} />;
+      case "minimal": return <MinimalTemplate data={data} />;
+      case "elegant": return <ElegantTemplate data={data} />;
+      case "royal": return <RoyalTemplate data={data} />;
+      default: return <ClassicTemplate data={data} />;
     }
   };
 
