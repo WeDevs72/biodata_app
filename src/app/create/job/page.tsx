@@ -13,7 +13,7 @@ import { saveJobBiodata, loadJobBiodata } from "@/lib/storage";
 export default function CreateJobBiodataPage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {/* <Header /> */}
       <main className="flex-1 container mx-auto px-4 py-8">
         <Suspense fallback={<div className="flex items-center justify-center p-24 text-slate-500">Loading form...</div>}>
           <CreateJobContent />

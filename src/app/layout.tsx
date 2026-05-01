@@ -13,8 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BiodataEarth | Build your identity, your way",
-  description: "Create beautiful marriage biodatas, professional resumes, and business profiles in minutes.",
+  title: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
+  description: "Create beautiful biodatas online for free. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
+  keywords: ["biodata maker", "matrimonial biodata", "free resume builder India", "business profile creator"],
+  openGraph: {
+    title: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
+    description: "Create beautiful biodatas online for free. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
+    siteName: "BioDataEarth",
+    locale: "en_IN",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

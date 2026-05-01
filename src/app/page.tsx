@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle2, ShieldCheck, Layers, ChevronLeft, ChevronRight, Users, Briefcase, Building2, FileText } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Layers, ChevronLeft, ChevronRight, Users, Briefcase, Building2, FileText, MousePointerClick, FileEdit, Download } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -147,9 +147,9 @@ export default function Home() {
   const fadeIn = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5 } };
 
   const features = [
-    { icon: <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-4" />, title: "Fast & Easy", description: "Fill a simple form and generate a stunning biodata instantly. No design skills required." },
-    { icon: <ShieldCheck className="w-8 h-8 text-emerald-500 mb-4" />, title: "Secure & Private", description: "Your data remains local and secure. We respect your privacy out of the box." },
-    { icon: <Layers className="w-8 h-8 text-emerald-500 mb-4" />, title: "Multiple Categories", description: "Matrimonial, Job/Resume, or Business Profile — we have a template for every need." },
+    { icon: <CheckCircle2 className="w-8 h-8 text-rose-500 mb-4" />, title: "Fast & Easy", description: "Fill a simple form and generate a stunning biodata instantly. No design skills required." },
+    { icon: <ShieldCheck className="w-8 h-8 text-rose-500 mb-4" />, title: "Secure & Private", description: "Your data remains local and secure. We respect your privacy out of the box." },
+    { icon: <Layers className="w-8 h-8 text-rose-500 mb-4" />, title: "Multiple Categories", description: "Matrimonial, Job/Resume, or Business Profile — we have a template for every need." },
   ];
 
   return (
@@ -158,106 +158,185 @@ export default function Home() {
       <main className="flex-1 flex flex-col notranslate">
 
         {/* ── Hero Section ────────────────────────────────────────────────── */}
-        <section className="relative px-4 pt-28 pb-36 md:pt-40 md:pb-52 text-center flex flex-col items-center justify-center overflow-hidden">
-          {/* Gradient background — replaces the marriage photo */}
-          <div className="absolute inset-0 -z-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <section className="relative px-4 min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-50 via-orange-100/50 to-white dark:from-orange-950/30 dark:via-slate-900 dark:to-slate-950 py-20">
           {/* Decorative glow blobs */}
-          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-emerald-600/25 blur-3xl -z-10 pointer-events-none" />
-          <div className="absolute top-10 right-0 w-80 h-80 rounded-full bg-indigo-600/20 blur-3xl -z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full bg-amber-500/15 blur-3xl -z-10 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-orange-400/20 blur-3xl -z-10 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-rose-400/20 blur-3xl -z-10 pointer-events-none" />
 
-          <motion.div initial="initial" animate="animate" variants={staggerContainer} className="max-w-4xl space-y-8">
-            {/* Category pill row */}
-            <motion.div variants={fadeIn} className="flex flex-wrap gap-3 justify-center">
-              {[
-                { label: "Matrimonial", href: "/create", cls: "bg-rose-500/20 text-rose-300 border-rose-500/30" },
-                { label: "Job / Resume", href: "/create/job", cls: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30" },
-                { label: "Business Profile", href: "/create/business", cls: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
-              ].map((cat) => (
-                <Link key={cat.label} href={cat.href} className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-semibold tracking-wide ${cat.cls} hover:brightness-125 transition-all`}>
-                  <FileText className="w-3.5 h-3.5" />
-                  {cat.label}
-                </Link>
-              ))}
-            </motion.div>
+          <div className="container mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center z-10">
+            {/* Left side text content */}
+            <motion.div initial="initial" animate="animate" variants={staggerContainer} className="space-y-8 text-center lg:text-left">
+              <motion.h1 variants={fadeIn} className="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
+                Create Your Biodata in <br className="hidden lg:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">3 Minutes</span>
+              </motion.h1>
 
-            <motion.h1 variants={fadeIn} className="text-4xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-lg leading-tight">
-              Create Any Biodata in{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-violet-400 to-amber-400">
-                Minutes
-              </span>
-            </motion.h1>
+              <motion.p variants={fadeIn} className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                Matrimonial, Job Resume, or Business Profile — beautiful templates, instant PDF download.
+              </motion.p>
 
-            <motion.p variants={fadeIn} className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
-              Beautiful templates for every purpose — Marriage, Job Resume, or Business Profile. Fast, free, and completely private.
-            </motion.p>
-
-            {/* Stats row */}
-            <motion.div variants={fadeIn} className="flex flex-wrap justify-center gap-10 pt-2">
-              {[{ value: "3+", label: "Categories" }, { value: "9+", label: "Templates" }, { value: "100%", label: "Free & Private" }].map((s) => (
-                <div key={s.label} className="text-center">
-                  <p className="text-2xl font-extrabold text-white">{s.value}</p>
-                  <p className="text-xs text-white/50 uppercase tracking-widest mt-0.5">{s.label}</p>
+              {/* Three colorful icon badges */}
+              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start pt-2">
+                <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 font-semibold shadow-sm border border-rose-200 dark:border-rose-800/50">
+                  <span className="text-lg">💍</span> Matrimonial
                 </div>
-              ))}
+                <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 font-semibold shadow-sm border border-indigo-200 dark:border-indigo-800/50">
+                  <span className="text-lg">💼</span> Job Resume
+                </div>
+                <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 font-semibold shadow-sm border border-amber-200 dark:border-amber-800/50">
+                  <span className="text-lg">🏢</span> Business Profile
+                </div>
+              </motion.div>
             </motion.div>
 
-            {/* CTA buttons */}
-            <motion.div variants={fadeIn} className="flex flex-wrap gap-4 justify-center pt-2">
-              <Link href="/create" className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:opacity-90">
-                💍 Matrimonial Biodata
-              </Link>
-              <Link href="/create/job" className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:opacity-90">
-                💼 Job Resume
-              </Link>
-              <Link href="/create/business" className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:opacity-90">
-                🏢 Business Profile
-              </Link>
+            {/* Right side floating mockup */}
+            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative mx-auto hidden lg:flex justify-center w-full max-w-[400px]">
+              <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }} className="relative">
+                <div className="absolute inset-0 bg-gradient-to-tr from-orange-400 to-rose-400 rounded-2xl transform rotate-3 scale-105 opacity-30 blur-xl" />
+                <div className="relative bg-white shadow-2xl rounded-2xl border border-slate-200 overflow-hidden transform -rotate-2 hover:rotate-0 transition-transform duration-500 h-[500px] w-[350px] pointer-events-none">
+                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0" style={{ transform: 'scale(0.44)' }}>
+                    <ClassicTemplate data={matrimonialData} />
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
+        </section>
+
+        {/* ── How It Works Section ─────────────────────────────────────────── */}
+        <section className="py-20 bg-indigo-50 dark:bg-indigo-950/30">
+          <div className="container mx-auto px-4 md:px-6">
+            <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">How It Works</h2>
+              <p className="mt-3 text-slate-600 dark:text-slate-400 text-lg">Create your professional biodata in 3 simple steps.</p>
+            </motion.div>
+
+            <div className="relative max-w-5xl mx-auto">
+              {/* Dashed connector line for desktop */}
+              <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 border-t-2 border-dashed border-indigo-200 dark:border-indigo-800 -z-10" />
+
+              <div className="flex flex-col md:flex-row justify-between gap-10 md:gap-6 relative z-10">
+                {/* Step 1 */}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5 }} className="flex flex-col items-center flex-1 text-center group">
+                  <div className="relative mb-6">
+                    <div className="w-24 h-24 rounded-full bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center border-4 border-indigo-100 dark:border-indigo-900 group-hover:scale-105 transition-transform duration-300">
+                      <MousePointerClick className="w-10 h-10 text-indigo-500" />
+                    </div>
+                    <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-lg border-2 border-white dark:border-slate-900">
+                      1
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Choose Your Category</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed">Select between Matrimonial, Job/Resume, or Business Profile to get started.</p>
+                </motion.div>
+
+                {/* Step 2 */}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.5 }} className="flex flex-col items-center flex-1 text-center group">
+                  <div className="relative mb-6">
+                    <div className="w-24 h-24 rounded-full bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center border-4 border-indigo-100 dark:border-indigo-900 group-hover:scale-105 transition-transform duration-300">
+                      <FileEdit className="w-10 h-10 text-indigo-500" />
+                    </div>
+                    <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-lg border-2 border-white dark:border-slate-900">
+                      2
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Fill Your Details</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed">Simply fill out our easy-to-use form with your information and photo.</p>
+                </motion.div>
+
+                {/* Step 3 */}
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.5 }} className="flex flex-col items-center flex-1 text-center group">
+                  <div className="relative mb-6">
+                    <div className="w-24 h-24 rounded-full bg-white dark:bg-slate-800 shadow-xl flex items-center justify-center border-4 border-indigo-100 dark:border-indigo-900 group-hover:scale-105 transition-transform duration-300">
+                      <Download className="w-10 h-10 text-indigo-500" />
+                    </div>
+                    <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-lg border-2 border-white dark:border-slate-900">
+                      3
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Download Biodata</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xs leading-relaxed">Preview your details in real-time and download your stunning PDF instantly.</p>
+                </motion.div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ── Category Picker ──────────────────────────────────────────────── */}
-        <section className="py-20 bg-slate-50 dark:bg-slate-900">
+        <section className="py-24 bg-slate-50 dark:bg-slate-950/50">
           <div className="container mx-auto px-4 md:px-6">
-            <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">What are you creating today?</h2>
-              <p className="mt-3 text-slate-600 dark:text-slate-400 text-lg">Choose your biodata category to get started with the right template.</p>
+            <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">What are you creating today?</h2>
+              <p className="mt-4 text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">Choose your biodata category to get started with the right professional template.</p>
             </motion.div>
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              
               {/* Matrimonial */}
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0, duration: 0.5 }}
-                className="group relative rounded-2xl border-2 border-rose-200 dark:border-rose-800 bg-white dark:bg-slate-800 p-8 flex flex-col items-center text-center overflow-hidden hover:border-rose-500 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center mb-5 shadow-lg mx-auto"><Users className="w-8 h-8 text-white" /></div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Matrimonial</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">Create a beautiful marriage biodata with personal, family, and partner preference sections.</p>
-                  <Link href="/create" className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm">Create Matrimonial →</Link>
+                className="group relative rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center text-center overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(225,29,72,0.2)] hover:-translate-y-2 hover:border-rose-200 dark:hover:border-rose-800 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-b from-rose-50/50 to-transparent dark:from-rose-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                
+                <div className="relative z-10 flex flex-col items-center w-full h-full">
+                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-rose-400 to-rose-600 shadow-lg shadow-rose-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
+                    <Users className="w-10 h-10 text-white" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Matrimonial</h3>
+                  
+                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-1">
+                    Create a beautiful marriage biodata with dedicated sections for personal details, family background, and partner preferences.
+                  </p>
+                  
+                  <Link href="/create" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all duration-300">
+                    Create Matrimonial →
+                  </Link>
                 </div>
               </motion.div>
+
               {/* Job / Resume */}
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5 }}
-                className="group relative rounded-2xl border-2 border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-800 p-8 flex flex-col items-center text-center overflow-hidden hover:border-indigo-500 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mb-5 shadow-lg mx-auto"><Briefcase className="w-8 h-8 text-white" /></div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Job / Resume</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">Build a professional resume with experience, skills, and education for job platforms.</p>
-                  <Link href="/create/job" className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm">Create Resume →</Link>
+                className="group relative rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center text-center overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.2)] hover:-translate-y-2 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-transparent dark:from-indigo-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                
+                <div className="relative z-10 flex flex-col items-center w-full h-full">
+                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-lg shadow-indigo-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
+                    <Briefcase className="w-10 h-10 text-white" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Job / Resume</h3>
+                  
+                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-1">
+                    Build a professional resume highlighting your work experience, skills, and education. Perfectly formatted for job platforms.
+                  </p>
+                  
+                  <Link href="/create/job" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300">
+                    Create Resume →
+                  </Link>
                 </div>
               </motion.div>
+
               {/* Business Profile */}
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.5 }}
-                className="group relative rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-white dark:bg-slate-800 p-8 flex flex-col items-center text-center overflow-hidden hover:border-amber-500 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-5 shadow-lg mx-auto"><Building2 className="w-8 h-8 text-white" /></div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Business Profile</h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">Showcase your business with services, achievements, and contact details in a polished profile.</p>
-                  <Link href="/create/business" className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm">Create Business Profile →</Link>
+                className="group relative rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center text-center overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.2)] hover:-translate-y-2 hover:border-amber-200 dark:hover:border-amber-800 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-b from-amber-50/50 to-transparent dark:from-amber-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                
+                <div className="relative z-10 flex flex-col items-center w-full h-full">
+                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
+                    <Building2 className="w-10 h-10 text-white" />
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Business Profile</h3>
+                  
+                  <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-1">
+                    Showcase your business with a polished profile containing services, achievements, and easy-to-share contact details.
+                  </p>
+                  
+                  <Link href="/create/business" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-all duration-300">
+                    Create Business Profile →
+                  </Link>
                 </div>
               </motion.div>
+
             </div>
           </div>
         </section>
@@ -277,11 +356,10 @@ export default function Home() {
                   <button
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                      activeTab === cat.id
-                        ? `bg-gradient-to-r ${cat.accent} text-white shadow-md`
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${activeTab === cat.id
+                      ? `bg-gradient-to-r ${cat.accent} text-white shadow-md`
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                      }`}
                   >
                     {cat.icon}
                     {cat.label}
@@ -347,7 +425,7 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-12 text-center">
               {features.map((feature, idx) => (
                 <motion.div key={idx} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: idx * 0.1, duration: 0.5 }} className="flex flex-col items-center">
-                  <div className="p-4 bg-emerald-100 dark:bg-emerald-950/50 rounded-2xl mb-2">{feature.icon}</div>
+                  <div className="p-4 bg-rose-100 dark:bg-rose-950/50 rounded-2xl mb-2">{feature.icon}</div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{feature.description}</p>
                 </motion.div>
