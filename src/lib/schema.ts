@@ -32,6 +32,9 @@ export const biodataSchema = z.object({
   professionalCustomFields: z.array(customFieldSchema).optional(),
   familyCustomFields: z.array(customFieldSchema).optional(),
   partnerCustomFields: z.array(customFieldSchema).optional(),
+  
+  // Internal state
+  recordId: z.string().optional(),
 });
 
 export type BiodataFormValues = z.infer<typeof biodataSchema>;

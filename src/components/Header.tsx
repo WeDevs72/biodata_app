@@ -19,14 +19,14 @@ export function Header() {
     <header className={`fixed top-0 z-50 w-full transition-all duration-300 notranslate ${scrolled ? "bg-white shadow-sm py-2" : "bg-transparent py-4"}`}>
       <div className="container mx-auto flex h-14 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex flex-col items-start justify-center">
-          <span className={`font-extrabold text-2xl tracking-tight leading-none text-slate-900 dark:text-white`}>
+          <span className={`font-extrabold text-2xl tracking-tight leading-none text-rose-500 dark:text-white`}>
             BiodataEarth
           </span>
-          <span className={`text-[10px] font-bold uppercase tracking-widest mt-1 ${scrolled ? "text-slate-500" : "text-slate-600 dark:text-slate-400"}`}>
+          <span className={`text-[10px] font-bold  tracking-widest mt-1 ${scrolled ? "text-rose-500" : "text-rose-600 dark:text-slate-400"}`}>
             Build your identity, your way
           </span>
         </Link>
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <nav className="flex items-center space-x-2">
             <Link
               href="/create"
@@ -35,7 +35,7 @@ export function Header() {
               Create Biodata
             </Link>
           </nav>
-        </div>
+        </div> */}
       </div>
     </header>
   );

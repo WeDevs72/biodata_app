@@ -7,10 +7,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { saveBiodata } from "@/lib/storage";
+import { recordSubmission } from "@/lib/supabase-service";
+import { useSearchParams } from "next/navigation";
 
 export function MultiStepForm() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
+  const searchParams = useSearchParams();
+  const templateQuery = searchParams.get("template");
+  const template = ["classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
+    ? (templateQuery as string)
+    : "classic";
+
   const { register, control, trigger, setValue, watch, getValues, formState: { errors } } = useFormContext<BiodataFormValues>();
   const totalSteps = 5;
 
@@ -313,9 +321,27 @@ export function MultiStepForm() {
             onClick={async () => {
               const isValid = await trigger();
               if (isValid) {
-                saveBiodata(getValues());
-                setSaved(true);
-                setTimeout(() => setSaved(false), 4000);
+                const vals = getValues();
+                // Save to local storage
+                saveBiodata(vals);
+                
+                // Save to Supabase
+                const { success, error, record } = await recordSubmission({
+                  name: vals.fullName,
+                  category: "Matrimonial",
+                  template: template,
+                  city: vals.location,
+                  formData: vals
+                });
+
+                if (success && record) {
+                  setValue("recordId", String(record.id));
+                  setSaved(true);
+                  setTimeout(() => setSaved(false), 4000);
+                } else {
+                  console.error("Failed to save to database:", error);
+                  alert("Could not save to database. Please try again.");
+                }
               }
             }}
             className="px-6 py-2 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm"

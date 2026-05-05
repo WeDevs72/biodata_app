@@ -47,6 +47,9 @@ export const jobSchema = z.object({
 
   // Custom
   customFields: z.array(jobCustomFieldSchema).optional(),
+  
+  // Internal state
+  recordId: z.string().optional(),
 });
 
 export type JobFormValues = z.infer<typeof jobSchema>;

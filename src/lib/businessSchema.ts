@@ -41,6 +41,9 @@ export const businessSchema = z.object({
 
   // Custom
   customFields: z.array(businessCustomFieldSchema).optional(),
+
+  // Internal state
+  recordId: z.string().optional(),
 });
 
 export type BusinessFormValues = z.infer<typeof businessSchema>;

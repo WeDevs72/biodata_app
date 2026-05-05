@@ -6,10 +6,18 @@ import { JobFormValues } from "@/lib/jobSchema";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, CheckCircle2 } from "lucide-react";
 import { saveJobBiodata } from "@/lib/storage";
+import { recordSubmission } from "@/lib/supabase-service";
+import { useSearchParams } from "next/navigation";
 
 export function JobMultiStepForm() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
+  const searchParams = useSearchParams();
+  const templateQuery = searchParams.get("template");
+  const template = ["professional", "modern"].includes(templateQuery || "")
+    ? (templateQuery as string)
+    : "professional";
+
   const totalSteps = 4;
 
   const { register, control, trigger, setValue, watch, getValues, formState: { errors } } = useFormContext<JobFormValues>();
@@ -228,7 +236,30 @@ export function JobMultiStepForm() {
             Next Step
           </button>
         ) : (
-          <button type="button" onClick={async () => { const v = await trigger(); if (v) { saveJobBiodata(getValues()); setSaved(true); setTimeout(() => setSaved(false), 4000); } }} className="px-6 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm">
+          <button type="button" onClick={async () => {
+            const v = await trigger();
+            if (v) {
+              const vals = getValues();
+              saveJobBiodata(vals);
+
+              const { success, error, record } = await recordSubmission({
+                name: vals.fullName,
+                category: "Job Resume",
+                template: template,
+                city: vals.location,
+                formData: vals
+              });
+
+              if (success && record) {
+                setValue("recordId", String(record.id));
+                setSaved(true);
+                setTimeout(() => setSaved(false), 4000);
+              } else {
+                console.error("Failed to save to database:", error);
+                alert("Could not save to database. Please try again.");
+              }
+            }
+          }} className="px-6 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm">
             Save Resume
           </button>
         )}

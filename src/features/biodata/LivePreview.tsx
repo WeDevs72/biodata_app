@@ -8,9 +8,11 @@ import { MinimalTemplate } from "@/components/templates/MinimalTemplate";
 import { ElegantTemplate } from "@/components/templates/ElegantTemplate";
 import { RoyalTemplate } from "@/components/templates/RoyalTemplate";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Download, Loader2, AlertCircle } from "lucide-react";
 import { generatePdf } from "@/lib/generatePdf";
+import { supabase } from "@/lib/supabase";
+import { markAsDownloaded, checkPaymentStatus } from "@/lib/supabase-service";
 
 export function LivePreview({ template }: { template: string }) {
   // useFormContext().watch() subscribes to every form value change reactively.
@@ -20,7 +22,24 @@ export function LivePreview({ template }: { template: string }) {
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [validationError, setValidationError] = useState("");
+  const [templatePrice, setTemplatePrice] = useState<{ price: number, discount_price: number | null }>({ price: 99, discount_price: null });
   const pdfTargetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      const { data } = await supabase
+        .from('templates')
+        .select('price, discount_price')
+        .eq('name', template)
+        .eq('category', 'Matrimonial')
+        .single();
+      
+      if (data) {
+        setTemplatePrice({ price: data.price, discount_price: data.discount_price });
+      }
+    };
+    fetchPrice();
+  }, [template]);
 
   const renderTemplate = (data: Partial<BiodataFormValues>) => {
     switch (template) {
@@ -30,6 +49,60 @@ export function LivePreview({ template }: { template: string }) {
       case "elegant": return <ElegantTemplate data={data} />;
       case "royal": return <RoyalTemplate data={data} />;
       default: return <ClassicTemplate data={data} />;
+    }
+  };
+
+  const initiatePayment = async (recordId: string) => {
+    try {
+      const res = await fetch("/api/checkout/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recordId, category: "Matrimonial" }),
+      });
+      const order = await res.json();
+
+      if (order.error) throw new Error(order.error);
+
+      return new Promise((resolve, reject) => {
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
+          amount: order.amount,
+          currency: order.currency,
+          name: "BioDataEarth",
+          description: "Download Matrimonial Biodata PDF",
+          order_id: order.id,
+          handler: async (response: any) => {
+            const verifyRes = await fetch("/api/checkout/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...response,
+                recordId,
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.success) {
+              resolve(true);
+            } else {
+              reject(new Error("Verification failed"));
+            }
+          },
+          prefill: {
+            name: formValues.fullName,
+            email: "", // Not in schema, but can be added if needed
+            contact: "", 
+          },
+          theme: { color: "#F43F5E" },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on("payment.failed", (response: any) => {
+          reject(new Error(response.error.description));
+        });
+        rzp.open();
+      });
+    } catch (err: any) {
+      throw err;
     }
   };
 
@@ -44,15 +117,35 @@ export function LivePreview({ template }: { template: string }) {
     }
 
     if (!pdfTargetRef.current) return;
+
+    if (!formValues.recordId) {
+      setValidationError("Please save your biodata before downloading.");
+      return;
+    }
+
     setIsGenerating(true);
 
     try {
+      // 1. Check if already paid
+      const { paid } = await checkPaymentStatus(formValues.recordId);
+      
+      if (!paid) {
+        // 2. Trigger Razorpay if not paid
+        await initiatePayment(formValues.recordId);
+      }
+
+      // 3. Proceed to Generate PDF
       await generatePdf(
         pdfTargetRef.current,
         `biodata-${formValues.fullName?.replace(/\s+/g, "_") || "download"}.pdf`
       );
-    } catch {
-      setValidationError("Could not open print dialog. Please allow popups for this site and try again.");
+
+      // 4. Update download flag in database
+      await markAsDownloaded(formValues.recordId);
+      
+    } catch (err: any) {
+      console.error("PDF download/payment error:", err);
+      setValidationError(err.message || "Payment failed or download interrupted.");
     } finally {
       setIsGenerating(false);
     }
@@ -78,7 +171,7 @@ export function LivePreview({ template }: { template: string }) {
             </div>
             <div className={`flex items-center gap-1.5 ${!isGenerating ? '' : 'hidden'}`}>
               <Download className="w-4 h-4" />
-              <span>Download PDF</span>
+              <span>Download PDF (₹{templatePrice.discount_price || templatePrice.price})</span>
             </div>
           </button>
         </div>

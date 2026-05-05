@@ -168,7 +168,7 @@ export default function Home() {
             <motion.div initial="initial" animate="animate" variants={staggerContainer} className="space-y-8 text-center lg:text-left">
               <motion.h1 variants={fadeIn} className="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
                 Create Your Biodata in <br className="hidden lg:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">3 Minutes</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">Minutes</span>
               </motion.h1>
 
               <motion.p variants={fadeIn} className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
@@ -176,7 +176,7 @@ export default function Home() {
               </motion.p>
 
               {/* Three colorful icon badges */}
-              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start pt-2">
+              {/* <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start pt-2">
                 <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 font-semibold shadow-sm border border-rose-200 dark:border-rose-800/50">
                   <span className="text-lg">💍</span> Matrimonial
                 </div>
@@ -186,25 +186,60 @@ export default function Home() {
                 <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 font-semibold shadow-sm border border-amber-200 dark:border-amber-800/50">
                   <span className="text-lg">🏢</span> Business Profile
                 </div>
-              </motion.div>
+              </motion.div> */}
             </motion.div>
 
-            {/* Right side floating mockup */}
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative mx-auto hidden lg:flex justify-center w-full max-w-[400px]">
-              <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }} className="relative">
-                <div className="absolute inset-0 bg-gradient-to-tr from-orange-400 to-rose-400 rounded-2xl transform rotate-3 scale-105 opacity-30 blur-xl" />
-                <div className="relative bg-white shadow-2xl rounded-2xl border border-slate-200 overflow-hidden transform -rotate-2 hover:rotate-0 transition-transform duration-500 h-[500px] w-[350px] pointer-events-none">
-                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0" style={{ transform: 'scale(0.44)' }}>
-                    <ClassicTemplate data={matrimonialData} />
+            {/* Right side floating scattered buttons */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative mx-auto hidden lg:flex items-center justify-center w-full max-w-[600px] h-[700px]">
+
+              {/* Central glowing blur */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-orange-400 to-rose-400 rounded-full opacity-20 blur-[80px]" />
+
+              {/* Matrimonial Floating Template */}
+              <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }} className="absolute z-30 top-[5%] left-[5%]">
+                <Link href="/create" className="block relative w-[220px] h-[310px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(225,29,72,0.4)] border border-rose-200 dark:border-rose-800 bg-white transform -rotate-6 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group">
+                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
+                    <RoyalTemplate data={matrimonialData} />
                   </div>
-                </div>
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-rose-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="bg-white text-rose-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Matrimonial <ChevronRight className="w-4 h-4" /></span>
+                  </div>
+                </Link>
               </motion.div>
+
+              {/* Job Resume Floating Template */}
+              <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 1 }} className="absolute z-20 top-[35%] right-[5%] ">
+                <Link href="/create/job" className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(79,70,229,0.4)] border border-indigo-200 dark:border-indigo-800 bg-white transform rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group">
+                  <div className="w-[794px] h-[1142px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
+                    <JobProfessionalTemplate data={jobData as any} />
+                  </div>
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-indigo-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="bg-white text-indigo-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Resume <ChevronRight className="w-4 h-4" /></span>
+                  </div>
+                </Link>
+              </motion.div>
+
+              {/* Business Profile Floating Template */}
+              <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.5 }} className="absolute z-10 top-[65%] left-[10%]">
+                <Link href="/create/business" className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(245,158,11,0.4)] border border-amber-200 dark:border-amber-800 bg-white transform -rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group">
+                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
+                    <BusinessModernTemplate data={businessData as any} />
+                  </div>
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-amber-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="bg-white text-amber-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Business <ChevronRight className="w-4 h-4" /></span>
+                  </div>
+                </Link>
+              </motion.div>
+
             </motion.div>
           </div>
         </section>
 
         {/* ── How It Works Section ─────────────────────────────────────────── */}
-        <section className="py-20 bg-indigo-50 dark:bg-indigo-950/30">
+        <section className="py-20 bg-white dark:bg-white">
           <div className="container mx-auto px-4 md:px-6">
             <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">How It Works</h2>
@@ -270,23 +305,23 @@ export default function Home() {
               <p className="mt-4 text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">Choose your biodata category to get started with the right professional template.</p>
             </motion.div>
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              
+
               {/* Matrimonial */}
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0, duration: 0.5 }}
                 className="group relative rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center text-center overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(225,29,72,0.2)] hover:-translate-y-2 hover:border-rose-200 dark:hover:border-rose-800 transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-b from-rose-50/50 to-transparent dark:from-rose-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                
+
                 <div className="relative z-10 flex flex-col items-center w-full h-full">
                   <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-rose-400 to-rose-600 shadow-lg shadow-rose-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
                     <Users className="w-10 h-10 text-white" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Matrimonial</h3>
-                  
+
                   <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-1">
                     Create a beautiful marriage biodata with dedicated sections for personal details, family background, and partner preferences.
                   </p>
-                  
+
                   <Link href="/create" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all duration-300">
                     Create Matrimonial →
                   </Link>
@@ -297,18 +332,18 @@ export default function Home() {
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1, duration: 0.5 }}
                 className="group relative rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center text-center overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.2)] hover:-translate-y-2 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-transparent dark:from-indigo-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                
+
                 <div className="relative z-10 flex flex-col items-center w-full h-full">
                   <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-lg shadow-indigo-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
                     <Briefcase className="w-10 h-10 text-white" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Job / Resume</h3>
-                  
+
                   <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-1">
                     Build a professional resume highlighting your work experience, skills, and education. Perfectly formatted for job platforms.
                   </p>
-                  
+
                   <Link href="/create/job" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300">
                     Create Resume →
                   </Link>
@@ -319,18 +354,18 @@ export default function Home() {
               <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.5 }}
                 className="group relative rounded-[2rem] border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 flex flex-col items-center text-center overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(245,158,11,0.2)] hover:-translate-y-2 hover:border-amber-200 dark:hover:border-amber-800 transition-all duration-500">
                 <div className="absolute inset-0 bg-gradient-to-b from-amber-50/50 to-transparent dark:from-amber-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                
+
                 <div className="relative z-10 flex flex-col items-center w-full h-full">
                   <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/30 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
                     <Building2 className="w-10 h-10 text-white" />
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Business Profile</h3>
-                  
+
                   <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-1">
                     Showcase your business with a polished profile containing services, achievements, and easy-to-share contact details.
                   </p>
-                  
+
                   <Link href="/create/business" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-all duration-300">
                     Create Business Profile →
                   </Link>
