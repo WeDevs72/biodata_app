@@ -83,7 +83,7 @@ function CreateJobContent() {
           <JobMultiStepForm />
         </div>
         <div className="lg:sticky lg:top-24 max-lg:order-first">
-          <JobLivePreview template={template} />
+          <JobLivePreview />
         </div>
       </div>
     </FormProvider>

@@ -4,7 +4,7 @@ import { Search, Download, Eye, Trash2, Flag, ChevronLeft, ChevronRight, X, File
 import { supabase } from "@/lib/supabase";
 
 type Category = "Matrimonial" | "Job Resume" | "Business";
-interface Record {
+interface AdminRecord {
   id: string | number; name: string; category: Category; template: string;
   date: string; city: string; downloaded: boolean; flagged?: boolean;
   data?: any;
@@ -25,10 +25,10 @@ export default function RecordsPage() {
   const [catFilter, setCatFilter]     = useState("All");
   const [timeFilter, setTimeFilter]   = useState("All Time");
   const [page, setPage]               = useState(1);
-  const [records, setRecords]         = useState<Record[]>([]);
+  const [records, setRecords]         = useState<AdminRecord[]>([]);
   const [loading, setLoading]         = useState(true);
-  const [deleteTarget, setDeleteTarget] = useState<Record | null>(null);
-  const [previewTarget, setPreviewTarget] = useState<Record | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<AdminRecord | null>(null);
+  const [previewTarget, setPreviewTarget] = useState<AdminRecord | null>(null);
   const [flagged, setFlagged]         = useState<Set<string | number>>(new Set());
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function RecordsPage() {
           setRecords([]);
         } else {
           // Map Supabase fields to local Record interface
-          const mapped: Record[] = data.map((item: any) => ({
+          const mapped: AdminRecord[] = data.map((item: any) => ({
             id: item.id,
             name: item.name,
             category: item.category as Category,

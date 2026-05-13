@@ -6,6 +6,7 @@ import {
   FileText, Lock, Smartphone, Laptop, Clock, Save, Upload,
   CheckCircle, AlertCircle, Trash2, Check, RefreshCw
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 type TabType = "General" | "Maintenance" | "SEO" | "PDF" | "Social" | "Security";
 
@@ -270,7 +271,7 @@ export default function SettingsPage() {
         {activeTab === "Maintenance" && (
           <div style={{ maxWidth: 600 }}>
             <div className="form-group">
-              <div style={{ display: 'flex', alignItems: 'center', justifyBetween: 'space-between', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--border)' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>Maintenance Mode</div>
                   <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Restrict access to the site while updates are in progress.</div>
