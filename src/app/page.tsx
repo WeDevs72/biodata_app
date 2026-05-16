@@ -17,10 +17,16 @@ import { RoyalTemplate } from "@/components/templates/RoyalTemplate";
 // Job / Resume templates
 import { JobProfessionalTemplate } from "@/components/templates/job/JobProfessionalTemplate";
 import { JobModernTemplate } from "@/components/templates/job/JobModernTemplate";
+import { JobClassicProfessionalTemplate } from "@/components/templates/job/JobClassicProfessionalTemplate";
+import { JobElegantSaffronTemplate } from "@/components/templates/job/JobElegantSaffronTemplate";
+import { JobExecutivePremiumTemplate } from "@/components/templates/job/JobExecutivePremiumTemplate";
 
 // Business templates
 import { BusinessClassicTemplate } from "@/components/templates/business/BusinessClassicTemplate";
 import { BusinessModernTemplate } from "@/components/templates/business/BusinessModernTemplate";
+import { BusinessMinimalElegantTemplate } from "@/components/templates/business/BusinessMinimalElegantTemplate";
+import { BusinessStartupBoldTemplate } from "@/components/templates/business/BusinessStartupBoldTemplate";
+import { BusinessRoyalIndianTemplate } from "@/components/templates/business/BusinessRoyalIndianTemplate";
 
 // ── Demo data for template previews ─────────────────────────────────────────
 
@@ -112,6 +118,9 @@ const TAB_CATEGORIES = [
     accent: "from-indigo-500 to-violet-600",
     createHref: "/create/job",
     templates: [
+      { name: "Executive Premium", slug: "executive-premium", Component: JobExecutivePremiumTemplate, data: jobData },
+      { name: "Elegant Saffron", slug: "elegant-saffron", Component: JobElegantSaffronTemplate, data: jobData },
+      { name: "Classic Professional", slug: "classic-professional", Component: JobClassicProfessionalTemplate, data: jobData },
       { name: "Professional", slug: "professional", Component: JobProfessionalTemplate, data: jobData },
       { name: "Modern", slug: "modern", Component: JobModernTemplate, data: jobData },
     ],
@@ -123,6 +132,9 @@ const TAB_CATEGORIES = [
     accent: "from-amber-500 to-orange-500",
     createHref: "/create/business",
     templates: [
+      { name: "🏆 Royal Indian Business", slug: "royal-indian", Component: BusinessRoyalIndianTemplate, data: businessData },
+      { name: "Startup Bold", slug: "startup-bold", Component: BusinessStartupBoldTemplate, data: businessData },
+      { name: "Minimal Elegant", slug: "minimal-elegant", Component: BusinessMinimalElegantTemplate, data: businessData },
       { name: "Classic Gold", slug: "classic", Component: BusinessClassicTemplate, data: businessData },
       { name: "Modern Teal", slug: "modern", Component: BusinessModernTemplate, data: businessData },
     ],

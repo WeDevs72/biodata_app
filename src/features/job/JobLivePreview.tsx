@@ -5,6 +5,9 @@ import { useFormContext } from "react-hook-form";
 import { JobFormValues } from "@/lib/jobSchema";
 import { JobProfessionalTemplate } from "@/components/templates/job/JobProfessionalTemplate";
 import { JobModernTemplate } from "@/components/templates/job/JobModernTemplate";
+import { JobClassicProfessionalTemplate } from "@/components/templates/job/JobClassicProfessionalTemplate";
+import { JobElegantSaffronTemplate } from "@/components/templates/job/JobElegantSaffronTemplate";
+import { JobExecutivePremiumTemplate } from "@/components/templates/job/JobExecutivePremiumTemplate";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 import { Download, Loader2, AlertCircle } from "lucide-react";
@@ -23,7 +26,7 @@ export function JobLivePreview() {
 
   const searchParams = useSearchParams();
   const templateQuery = searchParams.get("template");
-  const template = ["professional", "modern"].includes(templateQuery || "")
+  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "professional";
 
@@ -50,6 +53,9 @@ export function JobLivePreview() {
 
   const renderTemplate = (data: Partial<JobFormValues>) => {
     switch (template) {
+      case "executive-premium": return <JobExecutivePremiumTemplate data={data} />;
+      case "elegant-saffron": return <JobElegantSaffronTemplate data={data} />;
+      case "classic-professional": return <JobClassicProfessionalTemplate data={data} />;
       case "modern": return <JobModernTemplate data={data} />;
       default: return <JobProfessionalTemplate data={data} />;
     }

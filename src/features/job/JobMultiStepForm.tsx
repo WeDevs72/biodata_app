@@ -7,15 +7,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, CheckCircle2, Loader2 } from "lucide-react";
 import { saveJobBiodata } from "@/lib/storage";
 import { recordSubmission } from "@/lib/supabase-service";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export function JobMultiStepForm() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const templateQuery = searchParams.get("template");
-  const template = ["professional", "modern"].includes(templateQuery || "")
+  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "professional";
 
@@ -53,7 +55,7 @@ export function JobMultiStepForm() {
     }
   };
 
-  const stepNames = ["Personal Info", "Experience & Summary", "Education & Skills", "Photo & Finish"];
+  const stepNames = ["Personal Info", "Experience & Summary", "Education & Skills", "Photo & Template"];
   const inp = "w-full p-3 border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow text-sm";
   const lbl = "block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1";
   const err = "text-red-500 text-xs mt-1 block";
@@ -198,29 +200,65 @@ export function JobMultiStepForm() {
             )}
 
             {step === 4 && (
-              <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
-                {photoUrl ? (
-                  <div className="flex flex-col items-center">
-                    <img src={typeof photoUrl === "string" ? photoUrl : ""} alt="Preview" className="w-36 h-36 object-cover rounded-xl shadow-md border-4 border-white mb-4" />
-                    <button type="button" onClick={() => setValue("photo", "")} className="text-sm px-4 py-2 bg-white text-red-500 shadow-sm border border-slate-200 rounded-full font-medium hover:text-red-700 hover:bg-red-50 transition-colors">Change Photo</button>
+              <div className="space-y-8">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Upload Photo</label>
+                  <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
+                    {photoUrl ? (
+                      <div className="flex flex-col items-center">
+                        <img src={typeof photoUrl === "string" ? photoUrl : ""} alt="Preview" className="w-36 h-36 object-cover rounded-xl shadow-md border-4 border-white mb-4" />
+                        <button type="button" onClick={() => setValue("photo", "")} className="text-sm px-4 py-2 bg-white text-red-500 shadow-sm border border-slate-200 rounded-full font-medium hover:text-red-700 hover:bg-red-50 transition-colors">Change Photo</button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="mb-4 text-slate-400">
+                          <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                        <div className="flex text-sm text-slate-600 dark:text-slate-400">
+                          <label className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500">
+                            <span>Upload a photo</span>
+                            <input id="job-file-upload" type="file" className="sr-only" onChange={handlePhotoUpload} accept="image/*" />
+                          </label>
+                          <p className="pl-1">or drag and drop</p>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-2">PNG, JPG up to 10MB</p>
+                      </>
+                    )}
                   </div>
-                ) : (
-                  <>
-                    <div className="mb-4 text-slate-400">
-                      <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    <div className="flex text-sm text-slate-600 dark:text-slate-400">
-                      <label className="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500">
-                        <span>Upload a photo</span>
-                        <input id="job-file-upload" type="file" className="sr-only" onChange={handlePhotoUpload} accept="image/*" />
-                      </label>
-                      <p className="pl-1">or drag and drop</p>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-2">PNG, JPG up to 10MB</p>
-                  </>
-                )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Choose a Template</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { name: "⭐ Executive Premium", slug: "executive-premium" },
+                      { name: "Elegant Saffron", slug: "elegant-saffron" },
+                      { name: "Classic Professional", slug: "classic-professional" },
+                      { name: "Professional", slug: "professional" },
+                      { name: "Modern", slug: "modern" },
+                    ].map((t) => (
+                      <button
+                        key={t.slug}
+                        type="button"
+                        onClick={() => {
+                          const params = new URLSearchParams(searchParams.toString());
+                          params.set("template", t.slug);
+                          router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+                        }}
+                        className={`p-4 rounded-xl border-2 transition-all text-left flex flex-col justify-between h-24 ${
+                          template === t.slug
+                            ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 shadow-sm"
+                            : "border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-800 bg-white dark:bg-slate-900"
+                        }`}
+                      >
+                        <span className="font-medium text-sm text-slate-900 dark:text-white leading-tight">{t.name}</span>
+                        {template === t.slug && <CheckCircle2 className="w-5 h-5 text-indigo-500 self-end mt-2" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 

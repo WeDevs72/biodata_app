@@ -4,6 +4,9 @@ import { useFormContext } from "react-hook-form";
 import { BusinessFormValues } from "@/lib/businessSchema";
 import { BusinessClassicTemplate } from "@/components/templates/business/BusinessClassicTemplate";
 import { BusinessModernTemplate } from "@/components/templates/business/BusinessModernTemplate";
+import { BusinessMinimalElegantTemplate } from "@/components/templates/business/BusinessMinimalElegantTemplate";
+import { BusinessStartupBoldTemplate } from "@/components/templates/business/BusinessStartupBoldTemplate";
+import { BusinessRoyalIndianTemplate } from "@/components/templates/business/BusinessRoyalIndianTemplate";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { Download, Loader2, AlertCircle } from "lucide-react";
@@ -37,6 +40,9 @@ export function BusinessLivePreview({ template }: { template: string }) {
 
   const renderTemplate = (data: Partial<BusinessFormValues>) => {
     switch (template) {
+      case "royal-indian": return <BusinessRoyalIndianTemplate data={data} />;
+      case "startup-bold": return <BusinessStartupBoldTemplate data={data} />;
+      case "minimal-elegant": return <BusinessMinimalElegantTemplate data={data} />;
       case "modern": return <BusinessModernTemplate data={data} />;
       default: return <BusinessClassicTemplate data={data} />;
     }

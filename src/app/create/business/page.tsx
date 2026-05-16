@@ -27,7 +27,7 @@ function CreateBusinessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const templateQuery = searchParams.get("template");
-  const template = ["classic", "modern"].includes(templateQuery || "")
+  const template = ["classic", "modern", "minimal-elegant", "startup-bold", "royal-indian"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "classic";
 
