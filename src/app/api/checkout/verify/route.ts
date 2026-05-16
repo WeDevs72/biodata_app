@@ -1,49 +1,63 @@
 
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
+
+// Use service-role client on the server so RLS never blocks payment writes
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+);
 
 export async function POST(req: Request) {
   try {
+    const body_raw = await req.json();
     const { 
       razorpay_order_id, 
       razorpay_payment_id, 
       razorpay_signature,
       recordId 
-    } = await req.json();
+    } = body_raw;
 
-    const secret = process.env.RAZORPAY_KEY_SECRET || "placeholder_secret";
+    // ── Diagnostic logging ───────────────────────────────────────────────────
+    const secretFromEnv = process.env.RAZORPAY_KEY_SECRET;
+    console.log("[verify] Received payload:", {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature: razorpay_signature?.slice(0, 10) + "...", // partial for safety
+      recordId,
+    });
+    console.log("[verify] RAZORPAY_KEY_SECRET loaded:", secretFromEnv ? `YES (length=${secretFromEnv.length})` : "NO — using placeholder!");
+    console.log("[verify] RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID ?? "NOT SET");
+    // ────────────────────────────────────────────────────────────────────────
+
+    const secret = secretFromEnv || "placeholder_secret";
 
     // Create signature verification
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const signatureBody = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac("sha256", secret)
-      .update(body.toString())
+      .update(signatureBody)
       .digest("hex");
+
+    console.log("[verify] expectedSignature:", expectedSignature?.slice(0, 10) + "...");
+    console.log("[verify] receivedSignature:", razorpay_signature?.slice(0, 10) + "...");
+    console.log("[verify] isAuthentic:", expectedSignature === razorpay_signature);
 
     const isAuthentic = expectedSignature === razorpay_signature;
 
     if (isAuthentic) {
-      // Update the record in Supabase
-      // NOTE: We use the service role key internally for updates to bypass RLS if needed, 
-      // but here we use the standard client which is usually fine if policies are set.
-      const { error } = await supabase
-        .from('biodata_records')
-        .update({ 
-          is_downloaded: false, // Reset download flag if needed, or just set payment status
-          // data: ... we can store payment info in JSON data or new columns
-        })
-        .eq('id', recordId);
-
-      // Since we don't have a payment_status column yet, I'll store it in the JSON 'data' field
-      // but a dedicated column is better. I'll assume for now we use the 'data' field
-      // to store payment info to avoid DB schema errors.
-      
-      const { data: record } = await supabase
+      // Fetch the existing record data (service-role bypasses RLS on live)
+      const { data: record, error: fetchError } = await supabaseAdmin
         .from('biodata_records')
         .select('data')
         .eq('id', recordId)
         .single();
+
+      if (fetchError) {
+        console.error("[verify] Error fetching record for payment update:", fetchError);
+        // Don't block — still return success so PDF can download
+      }
 
       const updatedData = {
         ...(record?.data || {}),
@@ -55,17 +69,25 @@ export async function POST(req: Request) {
         }
       };
 
-      await supabase
+      const { error: updateError } = await supabaseAdmin
         .from('biodata_records')
         .update({ data: updatedData })
         .eq('id', recordId);
 
+      if (updateError) {
+        console.error("[verify] Error saving payment status:", updateError);
+        // Still return success — payment was verified, PDF should still download
+      }
+
+      console.log("[verify] ✅ Payment verified and DB updated for recordId:", recordId);
       return NextResponse.json({ success: true });
     } else {
+      console.error("[verify] ❌ Signature mismatch — returning failure");
       return NextResponse.json({ success: false, message: "Signature verification failed" }, { status: 400 });
     }
   } catch (error: any) {
-    console.error("Verification Error:", error);
+    console.error("[verify] Uncaught error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

@@ -4,7 +4,7 @@ import { useFormContext, useFieldArray } from "react-hook-form";
 import { useState } from "react";
 import { BusinessFormValues } from "@/lib/businessSchema";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Loader2 } from "lucide-react";
 import { saveBusinessBiodata } from "@/lib/storage";
 import { recordSubmission } from "@/lib/supabase-service";
 import { useSearchParams } from "next/navigation";
@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 export function BusinessMultiStepForm() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const searchParams = useSearchParams();
   const templateQuery = searchParams.get("template");
   const template = ["classic-gold", "modern-teal", "elegant-white"].includes(templateQuery || "")
@@ -238,31 +239,49 @@ export function BusinessMultiStepForm() {
             Next Step
           </button>
         ) : (
-          <button type="button" onClick={async () => {
-            const v = await trigger();
-            if (v) {
-              const vals = getValues();
-              saveBusinessBiodata(vals);
+          <button 
+            type="button" 
+            disabled={isSaving}
+            onClick={async () => {
+              const v = await trigger();
+              if (v) {
+                setIsSaving(true);
+                const vals = getValues();
+                try {
+                  saveBusinessBiodata(vals);
+                } catch (e) {
+                  console.warn("Could not save to localStorage, it might be full", e);
+                }
 
-              const { success, error, record } = await recordSubmission({
-                name: vals.ownerName,
-                category: "Business",
-                template: template,
-                city: vals.location,
-                formData: vals
-              });
+                const { success, error, record } = await recordSubmission({
+                  name: vals.ownerName,
+                  category: "Business",
+                  template: template,
+                  city: vals.location,
+                  formData: vals
+                });
 
-              if (success && record) {
-                setValue("recordId", String(record.id));
-                setSaved(true);
-                setTimeout(() => setSaved(false), 4000);
-              } else {
-                console.error("Failed to save to database:", error);
-                alert("Could not save to database. Please try again.");
+                if (success && record) {
+                  setValue("recordId", String(record.id));
+                  setSaved(true);
+                  setTimeout(() => setSaved(false), 4000);
+                } else {
+                  console.error("Failed to save to database:", error);
+                  alert("Could not save to database. Please try again.");
+                }
+                setIsSaving(false);
               }
-            }
-          }} className="px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm">
-            Save Profile
+            }} 
+            className="px-6 py-2 flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isSaving ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Profile"
+            )}
           </button>
         )}
       </div>

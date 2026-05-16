@@ -1,20 +1,19 @@
 "use client";
 
-import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { biodataSchema, BiodataFormValues } from "@/lib/schema";
 import { MultiStepForm } from "@/features/biodata/MultiStepForm";
 import { LivePreview } from "@/features/biodata/LivePreview";
-import { Header } from "@/components/Header";
 import { Suspense, useEffect, useRef } from "react";
-import Script from "next/script";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { saveBiodata, loadBiodata } from "@/lib/storage";
+import { ArrowLeft } from "lucide-react";
 
 export default function CreateBiodataPage() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* <Header /> */}
       <main className="flex-1 container mx-auto px-4 py-8">
         <Suspense fallback={<div className="flex items-center justify-center p-24 text-slate-500">Loading form...</div>}>
           <CreateBiodataContent />
@@ -26,6 +25,7 @@ export default function CreateBiodataPage() {
 
 function CreateBiodataContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const templateQuery = searchParams.get("template");
   const template = ["classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
     ? (templateQuery as any)
@@ -78,6 +78,23 @@ function CreateBiodataContent() {
 
   return (
     <FormProvider {...methods}>
+      {/* Back navigation bar — uses router.back() to preserve the browser history stack */}
+      <div className="mb-6 flex items-center gap-3 flex-wrap">
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </button>
+        <span className="text-slate-300 dark:text-slate-700">|</span>
+        <span className="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
+          Matrimonial Biodata
+        </span>
+        <span className="text-xs text-slate-400 capitalize">— {template} template</span>
+
+      </div>
+
       <div className="grid lg:grid-cols-2 gap-8 items-start">
         <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 lg:p-8">
           <MultiStepForm />

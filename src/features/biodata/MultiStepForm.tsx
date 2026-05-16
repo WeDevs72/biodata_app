@@ -4,16 +4,19 @@ import { useFormContext, useFieldArray } from "react-hook-form";
 import { useState } from "react";
 import { BiodataFormValues } from "@/lib/schema";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Loader2 } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { saveBiodata } from "@/lib/storage";
 import { recordSubmission } from "@/lib/supabase-service";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export function MultiStepForm() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const templateQuery = searchParams.get("template");
   const template = ["classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
     ? (templateQuery as string)
@@ -79,7 +82,7 @@ export function MultiStepForm() {
             step === 1 ? "Personal Details" :
               step === 2 ? "Professional Details" :
                 step === 3 ? "Family Details" :
-                  step === 4 ? "Partner Preferences" : "Upload Photo"
+                  step === 4 ? "Partner Preferences" : "Upload Photo & Template"
           }
         </h2>
       </div>
@@ -267,31 +270,67 @@ export function MultiStepForm() {
               </div>
             )}
 
-            {/* Step 5: Upload Photo */}
+            {/* Step 5: Upload Photo & Template Selection */}
             {step === 5 && (
-              <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
-                {photoUrl ? (
-                  <div className="flex flex-col items-center">
-                    <img src={typeof photoUrl === 'string' ? photoUrl : URL.createObjectURL(photoUrl[0])} alt="Preview" className="w-40 h-40 object-cover rounded-md shadow-md border-4 border-white mb-4" />
-                    <button type="button" onClick={() => setValue("photo", "")} className="text-sm px-4 py-2 bg-white text-red-500 shadow-sm border border-slate-200 rounded-full font-medium hover:text-red-700 hover:bg-red-50 transition-colors">Change Photo</button>
+              <div className="space-y-8">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Upload Photo</label>
+                  <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
+                    {photoUrl ? (
+                      <div className="flex flex-col items-center">
+                        <img src={typeof photoUrl === 'string' ? photoUrl : URL.createObjectURL(photoUrl[0])} alt="Preview" className="w-40 h-40 object-cover rounded-md shadow-md border-4 border-white mb-4" />
+                        <button type="button" onClick={() => setValue("photo", "")} className="text-sm px-4 py-2 bg-white text-red-500 shadow-sm border border-slate-200 rounded-full font-medium hover:text-red-700 hover:bg-red-50 transition-colors">Change Photo</button>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="mb-4 text-slate-400">
+                          <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                        <div className="flex text-sm text-slate-600 dark:text-slate-400">
+                          <label className="relative cursor-pointer rounded-md font-medium text-pink-600 hover:text-pink-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500">
+                            <span>Upload a file</span>
+                            <input id="file-upload" type="file" className="sr-only" onChange={handlePhotoUpload} accept="image/*" />
+                          </label>
+                          <p className="pl-1">or drag and drop</p>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-2">PNG, JPG, GIF up to 10MB</p>
+                      </>
+                    )}
                   </div>
-                ) : (
-                  <>
-                    <div className="mb-4 text-slate-400">
-                      <svg className="mx-auto h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    <div className="flex text-sm text-slate-600 dark:text-slate-400">
-                      <label className="relative cursor-pointer rounded-md font-medium text-pink-600 hover:text-pink-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500">
-                        <span>Upload a file</span>
-                        <input id="file-upload" type="file" className="sr-only" onChange={handlePhotoUpload} accept="image/*" />
-                      </label>
-                      <p className="pl-1">or drag and drop</p>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-2">PNG, JPG, GIF up to 10MB</p>
-                  </>
-                )}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Choose a Template</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {[
+                      { name: "Traditional Rich", slug: "classic" },
+                      { name: "Modern Floral", slug: "modern" },
+                      { name: "Minimal Gold", slug: "minimal" },
+                      { name: "Elegant Emerald", slug: "elegant" },
+                      { name: "Royal Purple", slug: "royal" },
+                    ].map((t) => (
+                      <button
+                        key={t.slug}
+                        type="button"
+                        onClick={() => {
+                          const params = new URLSearchParams(searchParams.toString());
+                          params.set("template", t.slug);
+                          router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+                        }}
+                        className={`p-4 rounded-xl border-2 transition-all text-left flex flex-col justify-between h-24 ${
+                          template === t.slug
+                            ? "border-pink-500 bg-pink-50 dark:bg-pink-500/10 shadow-sm"
+                            : "border-slate-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-800 bg-white dark:bg-slate-900"
+                        }`}
+                      >
+                        <span className="font-medium text-sm text-slate-900 dark:text-white leading-tight">{t.name}</span>
+                        {template === t.slug && <CheckCircle2 className="w-5 h-5 text-pink-500 self-end mt-2" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </motion.div>
@@ -318,12 +357,18 @@ export function MultiStepForm() {
         ) : (
           <button
             type="button"
+            disabled={isSaving}
             onClick={async () => {
               const isValid = await trigger();
               if (isValid) {
+                setIsSaving(true);
                 const vals = getValues();
-                // Save to local storage
-                saveBiodata(vals);
+                // Save to local storage safely
+                try {
+                  saveBiodata(vals);
+                } catch (e) {
+                  console.warn("Could not save to localStorage, it might be full", e);
+                }
                 
                 // Save to Supabase
                 const { success, error, record } = await recordSubmission({
@@ -342,11 +387,19 @@ export function MultiStepForm() {
                   console.error("Failed to save to database:", error);
                   alert("Could not save to database. Please try again.");
                 }
+                setIsSaving(false);
               }
             }}
-            className="px-6 py-2 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm"
+            className="px-6 py-2 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Save Biodata
+            {isSaving ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save Biodata"
+            )}
           </button>
         )}
       </div>

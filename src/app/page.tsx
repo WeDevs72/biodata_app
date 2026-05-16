@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { CheckCircle2, ShieldCheck, Layers, ChevronLeft, ChevronRight, Users, Briefcase, Building2, FileText, MousePointerClick, FileEdit, Download } from "lucide-react";
@@ -98,11 +98,11 @@ const TAB_CATEGORIES = [
     accent: "from-red-500 to-pink-500",
     createHref: "/create",
     templates: [
-      { name: "Traditional Rich", Component: ClassicTemplate, data: matrimonialData },
-      { name: "Modern Floral", Component: ModernTemplate, data: matrimonialData },
-      { name: "Minimal Gold", Component: MinimalTemplate, data: matrimonialData },
-      { name: "Elegant Emerald", Component: ElegantTemplate, data: matrimonialData },
-      { name: "Royal Purple", Component: RoyalTemplate, data: matrimonialData },
+      { name: "Traditional Rich", slug: "classic", Component: ClassicTemplate, data: matrimonialData },
+      { name: "Modern Floral", slug: "modern", Component: ModernTemplate, data: matrimonialData },
+      { name: "Minimal Gold", slug: "minimal", Component: MinimalTemplate, data: matrimonialData },
+      { name: "Elegant Emerald", slug: "elegant", Component: ElegantTemplate, data: matrimonialData },
+      { name: "Royal Purple", slug: "royal", Component: RoyalTemplate, data: matrimonialData },
     ],
   },
   {
@@ -112,8 +112,8 @@ const TAB_CATEGORIES = [
     accent: "from-indigo-500 to-violet-600",
     createHref: "/create/job",
     templates: [
-      { name: "Professional", Component: JobProfessionalTemplate, data: jobData },
-      { name: "Modern", Component: JobModernTemplate, data: jobData },
+      { name: "Professional", slug: "professional", Component: JobProfessionalTemplate, data: jobData },
+      { name: "Modern", slug: "modern", Component: JobModernTemplate, data: jobData },
     ],
   },
   {
@@ -123,15 +123,36 @@ const TAB_CATEGORIES = [
     accent: "from-amber-500 to-orange-500",
     createHref: "/create/business",
     templates: [
-      { name: "Classic Gold", Component: BusinessClassicTemplate, data: businessData },
-      { name: "Modern Teal", Component: BusinessModernTemplate, data: businessData },
+      { name: "Classic Gold", slug: "classic", Component: BusinessClassicTemplate, data: businessData },
+      { name: "Modern Teal", slug: "modern", Component: BusinessModernTemplate, data: businessData },
     ],
   },
 ];
 
 export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState("matrimonial");
+  const [activeTab, setActiveTabState] = useState("matrimonial");
+
+  // Restore the last-viewed template tab when user navigates back
+  useEffect(() => {
+    const saved = sessionStorage.getItem("homeTemplateTab");
+    if (saved && TAB_CATEGORIES.some((c) => c.id === saved)) {
+      setActiveTabState(saved);
+    }
+  }, []);
+
+  const setActiveTab = (tabId: string) => {
+    setActiveTabState(tabId);
+    sessionStorage.setItem("homeTemplateTab", tabId);
+  };
+
+  const handleScrollToTemplates = (categoryId: string) => {
+    setActiveTab(categoryId);
+    const element = document.getElementById("templates");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const activeCat = TAB_CATEGORIES.find((c) => c.id === activeTab)!;
 
@@ -197,7 +218,7 @@ export default function Home() {
 
               {/* Matrimonial Floating Template */}
               <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }} className="absolute z-30 top-[5%] left-[5%]">
-                <Link href="/create" className="block relative w-[220px] h-[310px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(225,29,72,0.4)] border border-rose-200 dark:border-rose-800 bg-white transform -rotate-6 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group">
+                <button onClick={() => handleScrollToTemplates('matrimonial')} className="block relative w-[220px] h-[310px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(225,29,72,0.4)] border border-rose-200 dark:border-rose-800 bg-white transform -rotate-6 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
                   <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
                     <RoyalTemplate data={matrimonialData} />
                   </div>
@@ -205,12 +226,12 @@ export default function Home() {
                   <div className="absolute inset-0 bg-rose-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="bg-white text-rose-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Matrimonial <ChevronRight className="w-4 h-4" /></span>
                   </div>
-                </Link>
+                </button>
               </motion.div>
 
               {/* Job Resume Floating Template */}
               <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 1 }} className="absolute z-20 top-[35%] right-[5%] ">
-                <Link href="/create/job" className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(79,70,229,0.4)] border border-indigo-200 dark:border-indigo-800 bg-white transform rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group">
+                <button onClick={() => handleScrollToTemplates('job')} className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(79,70,229,0.4)] border border-indigo-200 dark:border-indigo-800 bg-white transform rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
                   <div className="w-[794px] h-[1142px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
                     <JobProfessionalTemplate data={jobData as any} />
                   </div>
@@ -218,12 +239,12 @@ export default function Home() {
                   <div className="absolute inset-0 bg-indigo-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="bg-white text-indigo-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Resume <ChevronRight className="w-4 h-4" /></span>
                   </div>
-                </Link>
+                </button>
               </motion.div>
 
               {/* Business Profile Floating Template */}
               <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.5 }} className="absolute z-10 top-[65%] left-[10%]">
-                <Link href="/create/business" className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(245,158,11,0.4)] border border-amber-200 dark:border-amber-800 bg-white transform -rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group">
+                <button onClick={() => handleScrollToTemplates('business')} className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(245,158,11,0.4)] border border-amber-200 dark:border-amber-800 bg-white transform -rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
                   <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
                     <BusinessModernTemplate data={businessData as any} />
                   </div>
@@ -231,7 +252,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-amber-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <span className="bg-white text-amber-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Business <ChevronRight className="w-4 h-4" /></span>
                   </div>
-                </Link>
+                </button>
               </motion.div>
 
             </motion.div>
@@ -322,9 +343,9 @@ export default function Home() {
                     Create a beautiful marriage biodata with dedicated sections for personal details, family background, and partner preferences.
                   </p>
 
-                  <Link href="/create" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all duration-300">
-                    Create Matrimonial →
-                  </Link>
+                  <button onClick={() => handleScrollToTemplates('matrimonial')} className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-600 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all duration-300 cursor-pointer">
+                    Browse Templates →
+                  </button>
                 </div>
               </motion.div>
 
@@ -344,9 +365,9 @@ export default function Home() {
                     Build a professional resume highlighting your work experience, skills, and education. Perfectly formatted for job platforms.
                   </p>
 
-                  <Link href="/create/job" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300">
-                    Create Resume →
-                  </Link>
+                  <button onClick={() => handleScrollToTemplates('job')} className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 cursor-pointer">
+                    Browse Templates →
+                  </button>
                 </div>
               </motion.div>
 
@@ -366,9 +387,9 @@ export default function Home() {
                     Showcase your business with a polished profile containing services, achievements, and easy-to-share contact details.
                   </p>
 
-                  <Link href="/create/business" className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-all duration-300">
-                    Create Business Profile →
-                  </Link>
+                  <button onClick={() => handleScrollToTemplates('business')} className="w-full inline-flex items-center justify-center px-6 py-3.5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold hover:bg-amber-500 hover:text-white dark:hover:bg-amber-500 dark:hover:text-white transition-all duration-300 cursor-pointer">
+                    Browse Templates →
+                  </button>
                 </div>
               </motion.div>
 
@@ -377,7 +398,7 @@ export default function Home() {
         </section>
 
         {/* ── Tabbed Templates Section ─────────────────────────────────────── */}
-        <section className="py-16 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
+        <section id="templates" className="py-16 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800">
           <div className="container mx-auto px-4 md:px-6">
             <div className="text-center mb-10">
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Stunning Templates</h2>
@@ -434,7 +455,7 @@ export default function Home() {
                             <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">{tmpl.name}</p>
                           </div>
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/40 dark:bg-black/60 backdrop-blur-sm z-20">
-                            <Link href={activeCat.createHref} className={`px-6 py-3 bg-gradient-to-r ${activeCat.accent} text-white rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg`}>
+                            <Link href={`${activeCat.createHref}?template=${tmpl.slug}`} className={`px-6 py-3 bg-gradient-to-r ${activeCat.accent} text-white rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg`}>
                               Use Template
                             </Link>
                           </div>

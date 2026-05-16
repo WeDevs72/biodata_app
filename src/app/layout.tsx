@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
   description: "Create beautiful biodatas online for free. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
   keywords: ["biodata maker", "matrimonial biodata", "free resume builder India", "business profile creator"],
+  icons: {
+    icon: "/app_icon.png",
+    apple: "/app_icon.png",
+  },
   openGraph: {
     title: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
     description: "Create beautiful biodatas online for free. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",

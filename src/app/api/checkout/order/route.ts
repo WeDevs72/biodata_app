@@ -3,9 +3,15 @@ import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { supabase } from "@/lib/supabase";
 
+const KEY_ID = process.env.RAZORPAY_KEY_ID || "rzp_test_placeholder";
+const KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "placeholder_secret";
+
+console.log("[order] RAZORPAY_KEY_ID loaded:", KEY_ID ? `YES — ${KEY_ID.slice(0, 12)}...` : "NO");
+console.log("[order] RAZORPAY_KEY_SECRET loaded:", KEY_SECRET && KEY_SECRET !== "placeholder_secret" ? `YES (length=${KEY_SECRET.length})` : "NO — placeholder is being used!");
+
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || "rzp_test_placeholder",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "placeholder_secret",
+  key_id: KEY_ID,
+  key_secret: KEY_SECRET,
 });
 
 export async function POST(req: Request) {
@@ -33,7 +39,7 @@ export async function POST(req: Request) {
     const { data: template, error: templateError } = await supabase
       .from('templates')
       .select('price, discount_price')
-      .eq('name', templateName)
+      .ilike('name', templateName)   // case-insensitive: slug "classic" matches "Classic"
       .eq('category', category)
       .eq('is_active', true)
       .single();
@@ -43,11 +49,16 @@ export async function POST(req: Request) {
       finalPrice = template.discount_price !== null ? template.discount_price : template.price;
     }
 
+    // Receipt must be ≤ 40 characters (Razorpay limit).
+    // Truncate the recordId to fit: "rcpt_" (5) + 35 chars max.
+    const receiptSuffix = String(recordId).slice(0, 35);
+    const receipt = `rcpt_${receiptSuffix}`;
+
     // Amount should be in paise (₹1 = 100 paise)
     const options = {
-      amount: finalPrice * 100, 
+      amount: finalPrice * 100,
       currency: "INR",
-      receipt: `receipt_${recordId}`,
+      receipt,
       notes: {
         recordId,
         category,
@@ -55,6 +66,7 @@ export async function POST(req: Request) {
       }
     };
 
+    console.log("[order] Creating order:", { amount: options.amount, receipt, template: templateName });
     const order = await razorpay.orders.create(options);
 
     return NextResponse.json({
@@ -67,3 +79,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+

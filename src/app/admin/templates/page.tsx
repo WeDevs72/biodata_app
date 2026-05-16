@@ -17,6 +17,16 @@ interface Template {
   discount_price?: number;
 }
 
+// Keep price fields as strings in the form so the input stays editable
+interface FormData {
+  id?: number | string;
+  name?: string;
+  category?: Category;
+  status?: "active" | "inactive";
+  priceStr?: string;          // string so typing works smoothly
+  discountPriceStr?: string;  // string, optional
+}
+
 import { supabase } from "@/lib/supabase";
 
 const CAT_COLORS: Record<Category, string> = {
@@ -33,10 +43,11 @@ export default function TemplateManagement() {
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
-  const [formData, setFormData] = useState<Partial<Template>>({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     category: "Matrimonial",
-    price: 99,
+    priceStr: "99",
+    discountPriceStr: "",
     status: "active"
   });
 
@@ -99,7 +110,7 @@ export default function TemplateManagement() {
 
   const handleOpenAdd = () => {
     setModalMode("add");
-    setFormData({ name: "", category: "Matrimonial", price: 99, status: "active" });
+    setFormData({ name: "", category: "Matrimonial", priceStr: "99", discountPriceStr: "", status: "active" });
     setShowModal(true);
   };
 
@@ -109,8 +120,8 @@ export default function TemplateManagement() {
       id: t.id,
       name: t.name,
       category: t.category,
-      price: t.price,
-      discount_price: t.discount_price,
+      priceStr: t.price !== undefined ? String(t.price) : "",
+      discountPriceStr: t.discount_price !== undefined ? String(t.discount_price) : "",
       status: t.status
     });
     setShowModal(true);
@@ -118,18 +129,22 @@ export default function TemplateManagement() {
 
   const handleSaveTemplate = async () => {
     if (!formData.name) return alert("Name is required");
-    if (formData.price === undefined) return alert("Price is required");
+    const parsedPrice = parseFloat(formData.priceStr ?? "");
+    if (isNaN(parsedPrice) || parsedPrice < 0) return alert("A valid price is required");
+    const parsedDiscount = formData.discountPriceStr?.trim()
+      ? parseFloat(formData.discountPriceStr)
+      : null;
 
     const payload = {
       name: formData.name,
       category: formData.category,
-      price: Number(formData.price),
-      discount_price: formData.discount_price ? Number(formData.discount_price) : null,
+      price: parsedPrice,
+      discount_price: parsedDiscount !== null && !isNaN(parsedDiscount) ? parsedDiscount : null,
       is_active: formData.status === "active"
     };
 
     if (modalMode === "add") {
-      const { data, error } = await supabase.from("templates").insert([payload]).select();
+      const { error } = await supabase.from("templates").insert([payload]).select();
       if (error) {
         alert("Error creating template: " + error.message);
       } else {
@@ -410,21 +425,23 @@ export default function TemplateManagement() {
                 <div className="form-group">
                   <label className="form-label">Base Price (₹)</label>
                   <input 
-                    type="number" 
+                    type="text"
+                    inputMode="decimal"
                     className="form-input" 
                     placeholder="e.g. 99"
-                    value={formData.price || ""}
-                    onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
+                    value={formData.priceStr ?? ""}
+                    onChange={(e) => setFormData({ ...formData, priceStr: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Discount Price (₹)</label>
                   <input 
-                    type="number" 
+                    type="text"
+                    inputMode="decimal"
                     className="form-input" 
                     placeholder="Optional"
-                    value={formData.discount_price || ""}
-                    onChange={(e) => setFormData({ ...formData, discount_price: e.target.value ? Number(e.target.value) : undefined })}
+                    value={formData.discountPriceStr ?? ""}
+                    onChange={(e) => setFormData({ ...formData, discountPriceStr: e.target.value })}
                   />
                 </div>
               </div>

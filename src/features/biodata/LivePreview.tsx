@@ -14,32 +14,34 @@ import { generatePdf } from "@/lib/generatePdf";
 import { supabase } from "@/lib/supabase";
 import { markAsDownloaded, checkPaymentStatus } from "@/lib/supabase-service";
 
-export function LivePreview({ template }: { template: string }) {
+export function LivePreview({ template, category = "Matrimonial" }: { template: string; category?: string }) {
   // useFormContext().watch() subscribes to every form value change reactively.
   // This is the correct pattern — useWatch with a `control` ref can miss updates.
   const { watch, trigger, formState } = useFormContext<BiodataFormValues>();
   const formValues = watch();
 
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [validationError, setValidationError] = useState("");
   const [templatePrice, setTemplatePrice] = useState<{ price: number, discount_price: number | null }>({ price: 99, discount_price: null });
   const pdfTargetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPrice = async () => {
+      // ilike = case-insensitive LIKE so slug "classic" matches DB name "Classic"
       const { data } = await supabase
         .from('templates')
         .select('price, discount_price')
-        .eq('name', template)
-        .eq('category', 'Matrimonial')
+        .ilike('name', template)     // case-insensitive match
+        .eq('category', category)
         .single();
-      
+
       if (data) {
         setTemplatePrice({ price: data.price, discount_price: data.discount_price });
       }
     };
     fetchPrice();
-  }, [template]);
+  }, [template, category]);
 
   const renderTemplate = (data: Partial<BiodataFormValues>) => {
     switch (template) {
@@ -63,6 +65,10 @@ export function LivePreview({ template }: { template: string }) {
 
       if (order.error) throw new Error(order.error);
 
+      // Capture the order ID here — the Razorpay handler callback does NOT
+      // include razorpay_order_id in its response object on all environments.
+      const orderId = order.id;
+
       return new Promise((resolve, reject) => {
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
@@ -70,13 +76,15 @@ export function LivePreview({ template }: { template: string }) {
           currency: order.currency,
           name: "BioDataEarth",
           description: "Download Matrimonial Biodata PDF",
-          order_id: order.id,
+          order_id: orderId,
           handler: async (response: any) => {
             const verifyRes = await fetch("/api/checkout/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                ...response,
+                razorpay_order_id: orderId,                       // ← explicitly pass order ID
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
                 recordId,
               }),
             });
@@ -89,8 +97,8 @@ export function LivePreview({ template }: { template: string }) {
           },
           prefill: {
             name: formValues.fullName,
-            email: "", // Not in schema, but can be added if needed
-            contact: "", 
+            email: "",
+            contact: "",
           },
           theme: { color: "#F43F5E" },
         };
@@ -106,7 +114,7 @@ export function LivePreview({ template }: { template: string }) {
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownloadClick = async () => {
     setValidationError("");
 
     // Validate ALL fields before generating PDF
@@ -124,28 +132,62 @@ export function LivePreview({ template }: { template: string }) {
     }
 
     setIsGenerating(true);
+    try {
+      const { paid } = await checkPaymentStatus(formValues.recordId);
+      setIsGenerating(false);
+
+      if (!paid) {
+        setShowConfirmModal(true);
+      } else {
+        await executeDownloadFlow();
+      }
+    } catch (err) {
+      setIsGenerating(false);
+      setValidationError("Failed to check payment status. Please try again.");
+    }
+  };
+
+  const executeDownloadFlow = async () => {
+    setValidationError("");
+    setIsGenerating(true);
+    setShowConfirmModal(false);
 
     try {
       // 1. Check if already paid
-      const { paid } = await checkPaymentStatus(formValues.recordId);
-      
+      const { paid } = await checkPaymentStatus(formValues.recordId!);
+
       if (!paid) {
         // 2. Trigger Razorpay if not paid
-        await initiatePayment(formValues.recordId);
+        await initiatePayment(formValues.recordId!);
       }
 
-      // 3. Proceed to Generate PDF
+      // 3. Give the browser a moment to fully close the Razorpay modal before
+      //    opening the print dialog. Without this delay, some browsers block the
+      //    print() call as an unsolicited popup while the payment overlay is
+      //    still animating out.
+      await new Promise((res) => setTimeout(res, 800));
+
+      if (!pdfTargetRef.current) return;
+
+      // 4. Proceed to Generate PDF
       await generatePdf(
         pdfTargetRef.current,
         `biodata-${formValues.fullName?.replace(/\s+/g, "_") || "download"}.pdf`
       );
 
-      // 4. Update download flag in database
-      await markAsDownloaded(formValues.recordId);
-      
+      // 5. Update download flag in database
+      await markAsDownloaded(formValues.recordId!);
+
     } catch (err: any) {
       console.error("PDF download/payment error:", err);
-      setValidationError(err.message || "Payment failed or download interrupted.");
+      const msg = err?.message || "";
+      if (msg.toLowerCase().includes("cancel") || msg.toLowerCase().includes("dismiss")) {
+        setValidationError("Payment was cancelled. Please try again to download your biodata.");
+      } else if (msg.toLowerCase().includes("verif")) {
+        setValidationError("Payment verification failed. Please contact support with your payment ID.");
+      } else {
+        setValidationError(msg || "Payment failed or download was interrupted. Please try again.");
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -161,17 +203,18 @@ export function LivePreview({ template }: { template: string }) {
             {template} Template
           </span>
           <button
-            onClick={handleDownload}
+            onClick={handleDownloadClick}
             disabled={isGenerating}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm font-medium hover:opacity-90 active:scale-95 transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-base font-bold hover:opacity-90 active:scale-95 transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <div className={`flex items-center gap-1.5 ${isGenerating ? '' : 'hidden'}`}>
-              <Loader2 className="w-4 h-4 animate-spin" />
+            <div className={`flex items-center gap-2 ${isGenerating ? '' : 'hidden'}`}>
+              <Loader2 className="w-5 h-5 animate-spin" />
               <span>Generating...</span>
             </div>
-            <div className={`flex items-center gap-1.5 ${!isGenerating ? '' : 'hidden'}`}>
-              <Download className="w-4 h-4" />
-              <span>Download PDF (₹{templatePrice.discount_price || templatePrice.price})</span>
+            <div className={`flex items-center gap-2 ${!isGenerating ? '' : 'hidden'}`}>
+              <Download className="w-5 h-5" />
+              <span>Download PDF</span>
+              <span className="bg-white/20 px-2 py-0.5 rounded-md text-sm border border-white/10">₹{templatePrice.discount_price || templatePrice.price}</span>
             </div>
           </button>
         </div>
@@ -201,6 +244,45 @@ export function LivePreview({ template }: { template: string }) {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* Payment Confirmation Modal */}
+      <AnimatePresence>
+        {showConfirmModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800"
+            >
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Ready to Download?</h2>
+              <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                You are about to download the high-quality PDF of your biodata using the <span className="font-semibold text-slate-900 dark:text-white capitalize">{template}</span> template.
+              </p>
+
+              <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-5 mb-8 border border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                <span className="font-medium text-slate-700 dark:text-slate-300">Total Amount</span>
+                <span className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-pink-500">₹{templatePrice.discount_price || templatePrice.price}</span>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1 px-4 py-3.5 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={executeDownloadFlow}
+                  className="flex-1 px-4 py-3.5 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold hover:opacity-90 transition-opacity shadow-lg shadow-pink-500/30"
+                >
+                  Proceed to Pay
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ── Hidden full-size PDF render target ─────────────────────────────────
           Must use opacity:0 (NOT visibility:hidden) — html2canvas skips

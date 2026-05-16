@@ -14,8 +14,6 @@ import {
   Menu,
   X,
   LogOut,
-  Sun,
-  Moon,
   Globe,
   ChevronRight,
 } from "lucide-react";
@@ -33,12 +31,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
 
-  // Apply dark/light class to html element
+  // Apply light mode class permanently
   useEffect(() => {
-    document.documentElement.classList.toggle("admin-light", !darkMode);
-  }, [darkMode]);
+    document.documentElement.classList.remove("admin-light");
+  }, []);
 
   const currentPage = NAV_ITEMS.find((n) => n.href === pathname)?.label ?? "Admin";
 
@@ -74,13 +71,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div
       className="admin-shell"
-      style={{
-        "--bg-primary": darkMode ? "#080B14" : "#F0F4FF",
-        "--bg-secondary": darkMode ? "#0D1120" : "#FFFFFF",
-        "--bg-card": darkMode ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-        "--border": darkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
-        "--text-primary": darkMode ? "#F0F4FF" : "#080B14",
-        "--text-secondary": darkMode ? "#8896AC" : "#64748B",
+    style={{
+        "--bg-primary": "#F0F4FF",
+        "--bg-secondary": "#FFFFFF",
+        "--bg-card": "rgba(0,0,0,0.03)",
+        "--border": "rgba(0,0,0,0.08)",
+        "--text-primary": "#080B14",
+        "--text-secondary": "#64748B",
         "--accent": "#F97316",
         "--accent-glow": "rgba(249,115,22,0.25)",
         "--sidebar-w": "260px",
@@ -403,11 +400,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="admin-header-title">
             <span>BioDataEarth</span> — {currentPage}
           </div>
-
-          {/* Dark/Light toggle */}
-          <button className="header-btn" onClick={() => setDarkMode(!darkMode)} title="Toggle theme">
-            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
 
           {/* Admin avatar */}
           <div style={{ position: "relative" }}>

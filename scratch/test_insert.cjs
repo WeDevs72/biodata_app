@@ -27,6 +27,7 @@ async function testInsert() {
         created_at: new Date().toISOString()
       }
     ])
+    .select()
 
   if (error) {
     console.error('Insert failed:', error.message)

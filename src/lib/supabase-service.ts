@@ -79,7 +79,7 @@ export async function getTemplatePrice(templateName: string, category: string): 
     const { data, error } = await supabase
       .from('templates')
       .select('price, discount_price')
-      .eq('name', templateName)
+      .ilike('name', templateName)   // case-insensitive match
       .eq('category', category)
       .eq('is_active', true)
       .single();

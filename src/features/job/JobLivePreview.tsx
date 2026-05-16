@@ -66,6 +66,10 @@ export function JobLivePreview() {
 
       if (order.error) throw new Error(order.error);
 
+      // Capture the order ID here — the Razorpay handler callback does NOT
+      // include razorpay_order_id in its response object on all environments.
+      const orderId = order.id;
+
       return new Promise((resolve, reject) => {
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_placeholder",
@@ -73,13 +77,15 @@ export function JobLivePreview() {
           currency: order.currency,
           name: "BioDataEarth",
           description: "Download Job Resume PDF",
-          order_id: order.id,
+          order_id: orderId,
           handler: async (response: any) => {
             const verifyRes = await fetch("/api/checkout/verify", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                ...response,
+                razorpay_order_id: orderId,                       // ← explicitly pass order ID
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
                 recordId,
               }),
             });
@@ -133,18 +139,33 @@ export function JobLivePreview() {
         await initiatePayment(formValues.recordId);
       }
 
-      // 3. Proceed to Generate PDF
+      // 3. Give the browser a moment to fully close the Razorpay modal before
+      //    opening the print dialog. Without this delay, some browsers block the
+      //    print() call as an unsolicited popup while the payment overlay is
+      //    still animating out.
+      await new Promise((res) => setTimeout(res, 800));
+
+      if (!pdfTargetRef.current) return;
+
+      // 4. Proceed to Generate PDF
       await generatePdf(
         pdfTargetRef.current,
         `resume-${formValues.fullName?.replace(/\s+/g, "_") || "download"}.pdf`
       );
       
-      // 4. Update download flag in database
+      // 5. Update download flag in database
       await markAsDownloaded(formValues.recordId);
       
     } catch (err: any) {
       console.error("PDF download/payment error:", err);
-      setValidationError(err.message || "Payment failed or download interrupted.");
+      const msg = err?.message || "";
+      if (msg.toLowerCase().includes("cancel") || msg.toLowerCase().includes("dismiss")) {
+        setValidationError("Payment was cancelled. Please try again to download your resume.");
+      } else if (msg.toLowerCase().includes("verif")) {
+        setValidationError("Payment verification failed. Please contact support with your payment ID.");
+      } else {
+        setValidationError(msg || "Payment failed or download was interrupted. Please try again.");
+      }
     } finally {
       setIsGenerating(false);
     }

@@ -5,15 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { jobSchema, JobFormValues } from "@/lib/jobSchema";
 import { JobMultiStepForm } from "@/features/job/JobMultiStepForm";
 import { JobLivePreview } from "@/features/job/JobLivePreview";
-import { Header } from "@/components/Header";
 import { Suspense, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { saveJobBiodata, loadJobBiodata } from "@/lib/storage";
+import { ArrowLeft } from "lucide-react";
 
 export default function CreateJobBiodataPage() {
   return (
     <div className="flex flex-col min-h-screen">
-      {/* <Header /> */}
       <main className="flex-1 container mx-auto px-4 py-8">
         <Suspense fallback={<div className="flex items-center justify-center p-24 text-slate-500">Loading form...</div>}>
           <CreateJobContent />
@@ -25,6 +25,7 @@ export default function CreateJobBiodataPage() {
 
 function CreateJobContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const templateQuery = searchParams.get("template");
   const template = ["professional", "modern"].includes(templateQuery || "")
     ? (templateQuery as string)
@@ -70,12 +71,20 @@ function CreateJobContent() {
 
   return (
     <FormProvider {...methods}>
-      {/* Category label */}
-      <div className="mb-6 flex items-center gap-3">
+      {/* Back navigation bar */}
+      <div className="mb-6 flex items-center gap-3 flex-wrap">
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </button>
+        <span className="text-slate-300 dark:text-slate-700">|</span>
         <span className="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
           Job / Resume Biodata
         </span>
-        <a href="/" className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">← Change Category</a>
+        <span className="text-xs text-slate-400 capitalize">— {template} template</span>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8 items-start">
