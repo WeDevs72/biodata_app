@@ -13,7 +13,7 @@ export function ElegantTemplate({ data }: { data: Partial<BiodataFormValues> }) 
       <div className={`absolute bottom-0 left-0 w-full h-4 bg-emerald-800`}></div>
 
       <div className="relative z-10 w-full mb-10 text-center flex flex-col items-center pt-4">
-        <div className={`text-5xl mb-3 font-serif ${theme}`}>ॐ</div>
+        <div className={`text-5xl mb-3 font-serif ${theme}`}>{data.religiousSymbol || "ॐ"}</div>
         <h1 className={`text-3xl font-extrabold tracking-[0.2em] ${theme} uppercase`}>Biodata</h1>
         <div className={`w-32 h-px mt-6 bg-emerald-900/40`}></div>
       </div>

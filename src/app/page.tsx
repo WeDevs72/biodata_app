@@ -132,7 +132,7 @@ const TAB_CATEGORIES = [
     accent: "from-amber-500 to-orange-500",
     createHref: "/create/business",
     templates: [
-      { name: "🏆 Royal Indian Business", slug: "royal-indian", Component: BusinessRoyalIndianTemplate, data: businessData },
+      { name: "Royal Indian Business", slug: "royal-indian", Component: BusinessRoyalIndianTemplate, data: businessData },
       { name: "Startup Bold", slug: "startup-bold", Component: BusinessStartupBoldTemplate, data: businessData },
       { name: "Minimal Elegant", slug: "minimal-elegant", Component: BusinessMinimalElegantTemplate, data: businessData },
       { name: "Classic Gold", slug: "classic", Component: BusinessClassicTemplate, data: businessData },

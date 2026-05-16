@@ -18,7 +18,7 @@ export function MinimalTemplate({ data }: { data: Partial<BiodataFormValues> }) 
       <div className={`absolute bottom-5 right-5 w-2 h-2 rounded-full bg-amber-700`}></div>
 
       <div className="relative z-10 w-full mb-14 text-center flex flex-col items-center">
-        <div className={`text-4xl mb-3 font-medium ${theme} opacity-80`}>OM</div>
+        <div className={`text-4xl mb-3 font-medium ${theme} opacity-80`}>{data.religiousSymbol || "ॐ"}</div>
         <h1 className={`text-2xl font-bold tracking-[0.4em] ${theme} uppercase`}>Biodata</h1>
         <div className={`w-16 h-0.5 mt-4 bg-amber-700 border-none`}></div>
       </div>

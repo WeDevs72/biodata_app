@@ -17,7 +17,7 @@ export function ClassicTemplate({ data }: { data: Partial<BiodataFormValues> }) 
       </div>
 
       <div className="relative z-10 w-full mb-10 text-center">
-        <div className={`text-5xl mb-2 font-light ${theme}`}>ॐ</div>
+        <div className={`text-5xl mb-2 font-light ${theme}`}>{data.religiousSymbol || "ॐ"}</div>
         <h1 className={`text-xl font-bold tracking-[0.3em] ${theme} ml-2 uppercase`}>Biodata</h1>
       </div>
 

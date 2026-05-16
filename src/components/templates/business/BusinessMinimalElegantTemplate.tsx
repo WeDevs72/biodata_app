@@ -66,16 +66,6 @@ export function BusinessMinimalElegantTemplate({ data }: { data: Partial<Busines
       </div>
 
       <div className="flex-1 flex flex-col pt-8">
-        {/* ABOUT SECTION */}
-        <div className="px-12 mb-10 max-w-[85%] mx-auto text-center">
-          <p className="text-[10px] uppercase text-[#D97706] tracking-[0.2em] font-bold mb-2">About Us</p>
-          <h2 className="font-serif text-2xl text-[#1C1917] mb-4">Who We Are</h2>
-          <p className="text-justify text-[#1C1917]/80 text-sm leading-relaxed">
-            {data.ownerName && <span className="font-bold">Founded by {data.ownerName}, </span>}
-            {data.businessName || "We"} is a premier provider in the {data.industry || "industry"} sector. We are dedicated to delivering excellence and unparalleled value to our clients through our specialized services and meticulous attention to detail.
-          </p>
-        </div>
-
         {/* KEY FACTS STRIP */}
         {facts.length > 0 && (
           <div className="bg-[#FEF3C7] w-full py-8 px-12 mb-10">

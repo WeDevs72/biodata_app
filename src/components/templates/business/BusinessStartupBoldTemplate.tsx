@@ -96,33 +96,6 @@ export function BusinessStartupBoldTemplate({ data }: { data: Partial<BusinessFo
         </div>
       )}
 
-      {/* ABOUT SECTION - White */}
-      <div className={`px-10 pb-8 bg-white ${facts.length > 0 ? "pt-12" : "pt-10"}`}>
-        <span className="inline-block px-3 py-1 bg-orange-100 text-[#F97316] text-[10px] font-bold uppercase tracking-[0.15em] rounded-full mb-3">
-          About Us
-        </span>
-        <h2 className="font-extrabold text-2xl text-slate-900 tracking-tight mb-4">
-          We Build. We Grow. We Deliver.
-        </h2>
-        <p className="text-slate-600 text-sm leading-relaxed mb-6 font-medium max-w-[85%]">
-          {data.ownerName && <span className="text-slate-900 font-bold">Founded by {data.ownerName}, </span>}
-          {data.businessName || "We"} is a forward-thinking {data.industry || "technology"} company dedicated to breaking the mold. We combine aggressive innovation with rigorous execution to scale solutions that redefine our industry.
-        </p>
-        
-        {/* Mock USPs - Energetic Chips */}
-        <div className="flex flex-wrap gap-3">
-          <span className="px-3 py-1.5 bg-slate-100 text-slate-800 text-xs font-bold rounded-md flex items-center gap-1.5 border border-slate-200">
-            ⚡ Fast Delivery
-          </span>
-          <span className="px-3 py-1.5 bg-slate-100 text-slate-800 text-xs font-bold rounded-md flex items-center gap-1.5 border border-slate-200">
-            🎯 Result Focused
-          </span>
-          <span className="px-3 py-1.5 bg-slate-100 text-slate-800 text-xs font-bold rounded-md flex items-center gap-1.5 border border-slate-200">
-            💡 Innovation First
-          </span>
-        </div>
-      </div>
-
       {/* SERVICES SECTION - Dark #0F172A */}
       {data.offerings && data.offerings.length > 0 && (
         <div className="bg-[#0F172A] px-10 py-10">
@@ -175,7 +148,7 @@ export function BusinessStartupBoldTemplate({ data }: { data: Partial<BusinessFo
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-lg">{data.ownerName || "Founder"}</h3>
-            <p className="text-[#F97316] text-xs font-bold uppercase tracking-wider mb-2">Founder & CEO</p>
+            <p className="text-[#F97316] text-xs font-bold uppercase tracking-wider mb-2">Founder</p>
             {bioField && <p className="text-slate-600 text-sm font-medium leading-snug">{bioField.value}</p>}
           </div>
         </div>

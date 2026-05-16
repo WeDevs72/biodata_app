@@ -12,7 +12,7 @@ export function RoyalTemplate({ data }: { data: Partial<BiodataFormValues> }) {
       <div className="relative z-10 w-full mb-12 text-center">
         <div className="flex justify-center items-center gap-6 mb-4">
           <div className="h-px bg-fuchsia-900/30 w-16"></div>
-          <div className={`text-5xl font-medium ${theme}`}>ॐ</div>
+          <div className={`text-5xl font-medium ${theme}`}>{data.religiousSymbol || "ॐ"}</div>
           <div className="h-px bg-fuchsia-900/30 w-16"></div>
         </div>
         <h1 className={`text-2xl font-black tracking-[0.5em] ${theme} uppercase mt-4`}>Biodata</h1>

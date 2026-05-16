@@ -235,7 +235,7 @@ export function BusinessMultiStepForm() {
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Choose a Template</label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {[
-                      { name: "🏆 Royal Indian", slug: "royal-indian" },
+                      { name: "Royal Indian", slug: "royal-indian" },
                       { name: "Startup Bold", slug: "startup-bold" },
                       { name: "Minimal Elegant", slug: "minimal-elegant" },
                       { name: "Classic Gold", slug: "classic" },
@@ -249,11 +249,10 @@ export function BusinessMultiStepForm() {
                           params.set("template", t.slug);
                           router.replace(`${pathname}?${params.toString()}`, { scroll: false });
                         }}
-                        className={`p-4 rounded-xl border-2 transition-all text-left flex flex-col justify-between h-24 ${
-                          template === t.slug
+                        className={`p-4 rounded-xl border-2 transition-all text-left flex flex-col justify-between h-24 ${template === t.slug
                             ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 shadow-sm"
                             : "border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-800 bg-white dark:bg-slate-900"
-                        }`}
+                          }`}
                       >
                         <span className="font-medium text-sm text-slate-900 dark:text-white leading-tight">{t.name}</span>
                         {template === t.slug && <CheckCircle2 className="w-5 h-5 text-amber-500 self-end mt-2" />}
@@ -277,8 +276,8 @@ export function BusinessMultiStepForm() {
             Next Step
           </button>
         ) : (
-          <button 
-            type="button" 
+          <button
+            type="button"
             disabled={isSaving}
             onClick={async () => {
               const v = await trigger();
@@ -309,7 +308,7 @@ export function BusinessMultiStepForm() {
                 }
                 setIsSaving(false);
               }
-            }} 
+            }}
             className="px-6 py-2 flex items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:opacity-90 transition-transform active:scale-95 shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSaving ? (

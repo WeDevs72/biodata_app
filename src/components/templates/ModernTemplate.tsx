@@ -17,7 +17,7 @@ export function ModernTemplate({ data }: { data: Partial<BiodataFormValues> }) {
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-200/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 pointer-events-none"></div>
 
       <div className="relative z-10 w-full mb-12 text-center">
-        <div className={`text-4xl mb-2 font-serif text-teal-700`}>ॐ</div>
+        <div className={`text-4xl mb-2 font-serif ${theme}`}>{data.religiousSymbol || "ॐ"}</div>
         <h1 className={`text-2xl font-bold tracking-[0.25em] ${theme} ml-2 uppercase flex items-center justify-center gap-4`}>
           <span className="h-px bg-teal-800/30 w-16"></span>
           Biodata

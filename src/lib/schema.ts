@@ -27,6 +27,7 @@ export const biodataSchema = z.object({
   preferredEducation: z.string().optional(),
 
   photo: z.any().optional(),
+  religiousSymbol: z.string().optional(),
 
   personalCustomFields: z.array(customFieldSchema).optional(),
   professionalCustomFields: z.array(customFieldSchema).optional(),

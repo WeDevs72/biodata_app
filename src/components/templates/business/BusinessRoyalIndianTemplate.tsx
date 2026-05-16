@@ -88,7 +88,6 @@ export function BusinessRoyalIndianTemplate({ data }: { data: Partial<BusinessFo
         <h2 className="font-bold text-lg text-slate-800">
           Proprietor: <span className="text-[#9B1C1C]">{data.ownerName || "Owner Name"}</span>
         </h2>
-        <p className="text-slate-500 text-sm font-medium">Founder & Managing Director</p>
       </div>
 
       {/* CONTACT STRIP */}
@@ -103,18 +102,13 @@ export function BusinessRoyalIndianTemplate({ data }: { data: Partial<BusinessFo
       <div className="px-10 flex-1 space-y-8 mt-8 mb-8">
         
         {/* ABOUT BUSINESS */}
-        <div className="text-center">
-           <h3 className="font-serif font-bold text-2xl text-[#9B1C1C] uppercase tracking-wide">About Us</h3>
-           <div className="w-10 h-0.5 bg-[#D97706] mx-auto mt-1 mb-4"></div>
-           <p className="text-slate-700 text-sm text-justify leading-relaxed mx-auto max-w-2xl font-medium">
-             {data.businessName || "Our company"} is a trusted name in the {data.industry || "local market"}, dedicated to providing high-quality products and exceptional service to our valued customers. We believe in building long-lasting relationships through honesty, integrity, and a commitment to excellence.
-           </p>
-           {yearsOfTrust && yearsOfTrust > 0 && (
-             <div className="mt-5 inline-block bg-[#F97316] text-white px-5 py-1.5 rounded-full text-xs font-bold shadow-sm border border-[#D97706]">
+        {yearsOfTrust && yearsOfTrust > 0 && (
+          <div className="text-center">
+             <div className="inline-block bg-[#F97316] text-white px-5 py-1.5 rounded-full text-xs font-bold shadow-sm border border-[#D97706]">
                Serving since {estYear} — {yearsOfTrust} Years of Trust
              </div>
-           )}
-        </div>
+          </div>
+        )}
 
         {/* QUICK FACTS STRIP */}
         {facts.length > 0 && (

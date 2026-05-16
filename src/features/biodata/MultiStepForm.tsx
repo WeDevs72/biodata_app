@@ -10,6 +10,18 @@ import { saveBiodata } from "@/lib/storage";
 import { recordSubmission } from "@/lib/supabase-service";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
+const RELIGIOUS_SYMBOLS = [
+  { label: "Om", value: "ॐ" },
+  { label: "Swastika", value: "卐" },
+  { label: "Ek Onkar", value: "ੴ" },
+  { label: "Khanda", value: "☬" },
+  { label: "Crescent", value: "☪" },
+  { label: "Cross", value: "✝" },
+  { label: "Star of David", value: "✡" },
+  { label: "Wheel of Dharma", value: "☸" },
+  { label: "None", value: "" },
+];
+
 export function MultiStepForm() {
   const [step, setStep] = useState(1);
   const [saved, setSaved] = useState(false);
@@ -298,6 +310,27 @@ export function MultiStepForm() {
                         <p className="text-xs text-slate-500 mt-2">PNG, JPG, GIF up to 10MB</p>
                       </>
                     )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Religious Symbol</label>
+                  <div className="flex flex-wrap gap-2 p-2 border border-slate-200 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-900/50">
+                    {RELIGIOUS_SYMBOLS.map((symbol) => (
+                      <button
+                        key={symbol.label}
+                        type="button"
+                        onClick={() => setValue("religiousSymbol", symbol.value, { shouldDirty: true })}
+                        className={`w-10 h-10 flex items-center justify-center rounded-md border transition-all ${
+                          watch("religiousSymbol") === symbol.value
+                            ? "border-pink-500 bg-pink-50 text-pink-600 dark:bg-pink-900/20"
+                            : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:border-pink-300"
+                        }`}
+                        title={symbol.label}
+                      >
+                        <span className="text-xl">{symbol.value || "—"}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
 
