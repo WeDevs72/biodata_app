@@ -188,14 +188,15 @@ export function JobLivePreview() {
           <button
             onClick={handleDownload}
             disabled={isGenerating}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-sm font-medium hover:opacity-90 active:scale-95 transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-base font-bold hover:opacity-90 active:scale-95 transition-all shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <div className={`flex items-center gap-1.5 ${isGenerating ? "" : "hidden"}`}>
-              <Loader2 className="w-4 h-4 animate-spin" /><span>Generating...</span>
+            <div className={`flex items-center gap-2 ${isGenerating ? "" : "hidden"}`}>
+              <Loader2 className="w-5 h-5 animate-spin" /><span>Generating...</span>
             </div>
-            <div className={`flex items-center gap-1.5 ${!isGenerating ? "" : "hidden"}`}>
-              <Download className="w-4 h-4" />
-              <span>Download PDF (₹{templatePrice.discount_price || templatePrice.price})</span>
+            <div className={`flex items-center gap-2 ${!isGenerating ? "" : "hidden"}`}>
+              <Download className="w-5 h-5" />
+              <span>Download PDF</span>
+              <span className="bg-white/20 px-2 py-0.5 rounded-md text-sm border border-white/10">₹{templatePrice.discount_price || templatePrice.price}</span>
             </div>
           </button>
         </div>
