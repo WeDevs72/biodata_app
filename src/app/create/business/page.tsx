@@ -94,7 +94,7 @@ function CreateBusinessContent() {
         <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 lg:p-8">
           <BusinessMultiStepForm />
         </div>
-        <div className="lg:sticky lg:top-24 max-lg:order-first">
+        <div className="lg:sticky lg:top-24">
           <BusinessLivePreview template={template} />
         </div>
       </div>

@@ -199,7 +199,7 @@ export default function Home() {
           <div className="container mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center z-10">
             {/* Left side text content */}
             <motion.div initial="initial" animate="animate" variants={staggerContainer} className="space-y-8 text-center lg:text-left">
-              <motion.h1 variants={fadeIn} className="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
+              <motion.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
                 Create Your Biodata in <br className="hidden lg:block" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">Minutes</span>
               </motion.h1>
@@ -208,18 +208,18 @@ export default function Home() {
                 Matrimonial, Job Resume, or Business Profile — beautiful templates, instant PDF download.
               </motion.p>
 
-              {/* Three colorful icon badges */}
-              {/* <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start pt-2">
-                <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 font-semibold shadow-sm border border-rose-200 dark:border-rose-800/50">
-                  <span className="text-lg">💍</span> Matrimonial
-                </div>
-                <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 font-semibold shadow-sm border border-indigo-200 dark:border-indigo-800/50">
-                  <span className="text-lg">💼</span> Job Resume
-                </div>
-                <div className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300 font-semibold shadow-sm border border-amber-200 dark:border-amber-800/50">
-                  <span className="text-lg">🏢</span> Business Profile
-                </div>
-              </motion.div> */}
+              {/* Mobile CTA buttons — visible only below lg, where floating templates are hidden */}
+              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:hidden pt-2">
+                <button onClick={() => handleScrollToTemplates('matrimonial')} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-rose-500 text-white font-semibold shadow-md hover:bg-rose-600 transition-colors">
+                  <Users className="w-4 h-4" /> Matrimonial
+                </button>
+                <button onClick={() => handleScrollToTemplates('job')} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-indigo-500 text-white font-semibold shadow-md hover:bg-indigo-600 transition-colors">
+                  <Briefcase className="w-4 h-4" /> Job Resume
+                </button>
+                <button onClick={() => handleScrollToTemplates('business')} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-amber-500 text-white font-semibold shadow-md hover:bg-amber-600 transition-colors">
+                  <Building2 className="w-4 h-4" /> Business
+                </button>
+              </motion.div>
             </motion.div>
 
             {/* Right side floating scattered buttons */}
@@ -418,19 +418,19 @@ export default function Home() {
             </div>
 
             {/* Tab switcher */}
-            <div className="flex justify-center mb-10">
-              <div className="inline-flex bg-slate-100 dark:bg-slate-800 rounded-full p-1 gap-1">
+            <div className="flex justify-center mb-10 px-2">
+              <div className="flex flex-wrap justify-center bg-slate-100 dark:bg-slate-800 rounded-2xl p-1.5 gap-1.5 w-full sm:w-auto sm:rounded-full">
                 {TAB_CATEGORIES.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setActiveTab(cat.id)}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${activeTab === cat.id
+                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl sm:rounded-full text-sm font-semibold transition-all duration-200 flex-1 sm:flex-none justify-center min-w-0 ${activeTab === cat.id
                       ? `bg-gradient-to-r ${cat.accent} text-white shadow-md`
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                       }`}
                   >
                     {cat.icon}
-                    {cat.label}
+                    <span className="truncate">{cat.label}</span>
                   </button>
                 ))}
               </div>
@@ -439,12 +439,12 @@ export default function Home() {
             {/* Template carousel per tab */}
             <AnimatePresence mode="wait">
               <motion.div key={activeTab} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.3 }}>
-                <div className="relative px-2 md:px-0">
-                  <button onClick={() => scroll("left")} className={`absolute left-0 top-1/2 -translate-y-1/2 -ml-4 md:-ml-6 z-20 p-3 bg-gradient-to-r ${activeCat.accent} text-white rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95`}>
-                    <ChevronLeft className="w-6 h-6" />
+                <div className="relative">
+                  <button onClick={() => scroll("left")} className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 bg-gradient-to-r ${activeCat.accent} text-white rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95`}>
+                    <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
 
-                  <div ref={scrollContainerRef} className="flex gap-2 overflow-x-auto snap-x snap-mandatory pb-8 pt-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                  <div ref={scrollContainerRef} className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 px-10 sm:px-12" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
                     {activeCat.templates.map((tmpl, idx) => {
                       const Comp = tmpl.Component as React.ComponentType<{ data: typeof tmpl.data }>;
                       return (
@@ -453,10 +453,10 @@ export default function Home() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: idx * 0.08, duration: 0.4 }}
-                          className="mr-8 relative shrink-0 w-[340px] snap-center group rounded-xl h-[480px] overflow-hidden flex flex-col transition-transform hover:-translate-y-2 cursor-pointer"
+                          className="relative shrink-0 w-[260px] sm:w-[320px] md:w-[340px] snap-center group rounded-xl h-[380px] sm:h-[440px] md:h-[480px] overflow-hidden flex flex-col transition-transform hover:-translate-y-2 cursor-pointer"
                         >
                           <div className="w-full h-full relative pointer-events-none">
-                            <div className="absolute top-2 left-1/2 -translate-x-1/2" style={{ transform: "scale(0.42)", transformOrigin: "top center" }}>
+                            <div className="absolute top-2 left-1/2 -translate-x-1/2" style={{ transform: "scale(0.32)", transformOrigin: "top center" }}>
                               <div className="w-[794px] h-[1122px] shadow-2xl rounded-md overflow-hidden bg-white">
                                 <Comp data={tmpl.data as any} />
                               </div>
@@ -476,8 +476,8 @@ export default function Home() {
                     })}
                   </div>
 
-                  <button onClick={() => scroll("right")} className={`absolute right-0 top-1/2 -translate-y-1/2 -mr-4 md:-mr-6 z-20 p-3 bg-gradient-to-r ${activeCat.accent} text-white rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95`}>
-                    <ChevronRight className="w-6 h-6" />
+                  <button onClick={() => scroll("right")} className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 bg-gradient-to-r ${activeCat.accent} text-white rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95`}>
+                    <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
                 </div>
               </motion.div>

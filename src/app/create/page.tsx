@@ -100,7 +100,7 @@ function CreateBiodataContent() {
           <MultiStepForm />
         </div>
 
-        <div className="lg:sticky lg:top-24 max-lg:order-first">
+        <div className="lg:sticky lg:top-24">
           <LivePreview template={template} />
         </div>
       </div>
