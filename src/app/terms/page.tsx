@@ -59,10 +59,6 @@ export default function TermsPage() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
-                <Scale className="w-5 h-5 text-rose-500" />
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">BioDataEarth Legal Counsel</span>
-              </div>
             </aside>
 
             {/* Document Content */}
