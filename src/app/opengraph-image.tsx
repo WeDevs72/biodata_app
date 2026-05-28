@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "BioDataEarth — Free Biodata Maker for Matrimonial, Job & Business";
+export const alt = "BioDataEarth — Biodata Maker for Matrimonial, Job & Business";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -93,7 +93,7 @@ export default async function Image() {
             maxWidth: "820px",
           }}
         >
-          Free Biodata Maker for Matrimonial, Job Resume & Business
+          Biodata Maker for Matrimonial, Job Resume & Business
         </p>
 
         {/* Sub-headline */}

@@ -17,7 +17,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
-              Create beautiful, professional biodatas in minutes. Fast, free, and completely private.
+              Create beautiful, professional biodatas in minutes. Fast,and completely private.
             </p>
             {/* Social Icons */}
             <div className="flex space-x-4">

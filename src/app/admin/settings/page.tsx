@@ -23,7 +23,7 @@ export default function SettingsPage() {
     maintenanceMode: false,
     maintenanceMessage: "We are upgrading our systems to serve you better.",
     expectedBack: "2nd May, 6:00 PM IST",
-    metaTitle: "BioDataEarth — Free Online Biodata Maker",
+    metaTitle: "BioDataEarth —  Online Biodata Maker",
     metaDesc: "BioDataEarth is the world's most trusted biodata maker for marriage, job, and business profiles.",
     keywords: "biodata, marriage, resume, pdf maker",
     googleAnalyticsId: "",
@@ -59,7 +59,7 @@ export default function SettingsPage() {
   const handleSave = () => {
     setLoading(true);
     localStorage.setItem("admin_settings", JSON.stringify(settings));
-    
+
     // Simulate database delay
     setTimeout(() => {
       setLoading(false);
@@ -328,7 +328,7 @@ export default function SettingsPage() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                 <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>Enable Watermark</div>
                 <div className={`toggle-switch ${settings.watermarkEnabled ? 'on' : 'off'}`} onClick={() => updateSetting("watermarkEnabled", !settings.watermarkEnabled)}>
-                    <div className="toggle-knob" />
+                  <div className="toggle-knob" />
                 </div>
               </div>
             </div>
@@ -385,10 +385,10 @@ export default function SettingsPage() {
               </div>
               <div className="form-group">
                 <label className="form-label">New Password</label>
-                <input 
-                  type="password" 
-                  className="form-input" 
-                  placeholder="••••••••" 
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="••••••••"
                   value={passwords.new}
                   onChange={(e) => setPasswords(prev => ({ ...prev, new: e.target.value }))}
                   required
@@ -396,18 +396,18 @@ export default function SettingsPage() {
               </div>
               <div className="form-group">
                 <label className="form-label">Confirm New Password</label>
-                <input 
-                  type="password" 
-                  className="form-input" 
-                  placeholder="••••••••" 
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="••••••••"
                   value={passwords.confirm}
                   onChange={(e) => setPasswords(prev => ({ ...prev, confirm: e.target.value }))}
                   required
                 />
               </div>
-              <button 
-                type="submit" 
-                className="upload-btn" 
+              <button
+                type="submit"
+                className="upload-btn"
                 style={{ width: '100%', justifyContent: 'center', marginTop: 8, background: 'var(--accent)', color: 'white', border: 'none' }}
                 disabled={loading}
               >
@@ -417,19 +417,19 @@ export default function SettingsPage() {
             </form>
 
             <div style={{ marginTop: 24, padding: 16, borderRadius: 16, border: '1px dashed var(--border)', fontSize: 12, color: 'var(--text-secondary)' }}>
-                <p><strong>Note:</strong> Password updates are handled by Supabase Auth. You will be logged out of other devices after changing your password.</p>
+              <p><strong>Note:</strong> Password updates are handled by Supabase Auth. You will be logged out of other devices after changing your password.</p>
             </div>
           </div>
         )}
 
         {/* Footer Actions */}
         {activeTab !== "Security" && (
-            <div className="save-footer">
+          <div className="save-footer">
             <button className="main-save-btn" onClick={handleSave} disabled={loading}>
-                {loading ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} />}
-                Save Changes
+              {loading ? <RefreshCw className="animate-spin" size={18} /> : <Save size={18} />}
+              Save Changes
             </button>
-            </div>
+          </div>
         )}
       </div>
 

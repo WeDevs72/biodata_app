@@ -17,16 +17,16 @@ const BASE_URL = "https://biodataearth.com";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
+    default: "BioDataEarth — Matrimonial, Job Resume & Business Biodata Maker",
     template: "%s | BioDataEarth",
   },
   description:
-    "Create beautiful biodatas online for free. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
+    "Create beautiful biodatas online. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
   keywords: [
     "biodata maker",
     "matrimonial biodata",
-    "free biodata maker India",
-    "free resume builder India",
+    "Biodata maker India",
+    "Resume builder India",
     "business profile creator",
     "biodata PDF download",
     "marriage biodata format",
@@ -57,9 +57,9 @@ export const metadata: Metadata = {
     canonical: BASE_URL,
   },
   openGraph: {
-    title: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
+    title: "BioDataEarth —  Matrimonial, Job Resume & Business Biodata Maker",
     description:
-      "Create beautiful biodatas online for free. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
+      "Create beautiful biodatas online. Choose from matrimonial, job resume, or business profile templates. Instant PDF download. No signup needed.",
     url: BASE_URL,
     siteName: "BioDataEarth",
     locale: "en_IN",
@@ -69,15 +69,15 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "BioDataEarth — Free Biodata Maker for Matrimonial, Job & Business",
+        alt: "BioDataEarth — Biodata Maker for Matrimonial, Job & Business",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BioDataEarth — Free Matrimonial, Job Resume & Business Biodata Maker",
+    title: "BioDataEarth —  Matrimonial, Job Resume & Business Biodata Maker",
     description:
-      "Create beautiful biodatas online for free. Instant PDF download. No signup needed.",
+      "Create beautiful biodatas online. Instant PDF download. No signup needed.",
     images: ["/opengraph-image"],
   },
   verification: {
@@ -94,7 +94,7 @@ const jsonLd = {
       name: "BioDataEarth",
       url: "https://biodataearth.com",
       description:
-        "Free biodata maker for matrimonial, job resume, and business profiles.",
+        "Biodata maker for matrimonial, job resume, and business profiles.",
       inLanguage: "en-IN",
       potentialAction: {
         "@type": "SearchAction",
@@ -117,7 +117,7 @@ const jsonLd = {
         height: 512,
       },
       description:
-        "BioDataEarth is a free online biodata maker for matrimonial, job resume, and business profiles. Create and download beautiful biodatas as PDF instantly.",
+        "BioDataEarth is a online biodata maker for matrimonial, job resume, and business profiles. Create and download beautiful biodatas as PDF instantly.",
     },
     {
       "@type": "SoftwareApplication",

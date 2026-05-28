@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Create Matrimonial Biodata",
   description:
-    "Create a beautiful matrimonial biodata with personal details, family background, and partner preferences. Choose from 5+ stunning templates and download as PDF instantly — free.",
+    "Create a beautiful matrimonial biodata with personal details, family background, and partner preferences. Choose from 5+ stunning templates and download as PDF instantly.",
   alternates: {
     canonical: "https://biodataearth.com/create",
   },
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Create Matrimonial Biodata — BioDataEarth",
     description:
-      "Create a beautiful matrimonial biodata instantly. Choose from 5+ templates and download as PDF free.",
+      "Create a beautiful matrimonial biodata instantly. Choose from 5+ templates and download as PDF.",
   },
 };
 

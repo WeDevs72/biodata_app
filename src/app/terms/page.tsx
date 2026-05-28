@@ -93,7 +93,7 @@ export default function TermsPage() {
                   <li><strong>Business Profile:</strong> Corporate templates built to highlight industry credentials, financial parameters, and brand accomplishments.</li>
                 </ul>
                 <p>
-                  The service includes both free and premium templates. We reserve the right to modify, suspend, or discontinue any aspect of these services at any time without notice.
+                  The service includes premium templates. We reserve the right to modify, suspend, or discontinue any aspect of these services at any time without notice.
                 </p>
               </section>
 

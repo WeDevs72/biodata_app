@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "BioDataEarth — Free Biodata Maker",
+    name: "BioDataEarth — Biodata Maker",
     short_name: "BioDataEarth",
     description:
       "Create beautiful biodatas for matrimonial, job resume, and business profiles. Instant PDF download.",

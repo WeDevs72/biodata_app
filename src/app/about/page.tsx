@@ -37,14 +37,14 @@ export default function AboutPage() {
     <>
       <Header />
       <main className="flex-1 bg-gradient-to-b from-orange-50/40 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-28 pb-20 px-4 md:px-6 notranslate">
-        
+
         {/* Decorative background blobs */}
         <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-orange-400/10 blur-3xl -z-10 pointer-events-none" />
         <div className="absolute top-80 left-0 w-80 h-80 rounded-full bg-rose-400/10 blur-3xl -z-10 pointer-events-none" />
 
         <div className="max-w-5xl mx-auto">
           {/* Hero Header */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -62,7 +62,7 @@ export default function AboutPage() {
           </motion.div>
 
           {/* Core Story / Mission */}
-          <motion.div 
+          <motion.div
             variants={containerVariants}
             initial="initial"
             whileInView="animate"
@@ -84,7 +84,7 @@ export default function AboutPage() {
               </p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={fadeIn}
               className="relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xl overflow-hidden group"
             >
@@ -113,7 +113,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white mb-12 tracking-tight">
               Values That Define Us
             </h2>
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="initial"
               whileInView="animate"
@@ -121,7 +121,7 @@ export default function AboutPage() {
               className="grid md:grid-cols-3 gap-8"
             >
               {values.map((item, idx) => (
-                <motion.div 
+                <motion.div
                   key={idx}
                   variants={fadeIn}
                   className="p-8 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col hover:-translate-y-1"
