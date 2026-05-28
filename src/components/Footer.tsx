@@ -48,10 +48,10 @@ export function Footer() {
           <div className="md:col-span-1">
             <h4 className="text-white font-bold mb-4 tracking-wide">Company</h4>
             <ul className="space-y-2">
-              <li><Link href="#" className="text-slate-400 hover:text-white transition-colors text-sm">About Us</Link></li>
-              <li><Link href="#" className="text-slate-400 hover:text-white transition-colors text-sm">Contact</Link></li>
-              <li><Link href="#" className="text-slate-400 hover:text-white transition-colors text-sm">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-slate-400 hover:text-white transition-colors text-sm">Terms of Service</Link></li>
+              <li><Link href="/about" className="text-slate-400 hover:text-white transition-colors text-sm">About Us</Link></li>
+              <li><Link href="/contact" className="text-slate-400 hover:text-white transition-colors text-sm">Contact</Link></li>
+              <li><Link href="/privacy" className="text-slate-400 hover:text-white transition-colors text-sm">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-slate-400 hover:text-white transition-colors text-sm">Terms of Service</Link></li>
             </ul>
           </div>
 
