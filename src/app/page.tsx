@@ -15,6 +15,7 @@ import { ElegantTemplate } from "@/components/templates/ElegantTemplate";
 import { RoyalTemplate } from "@/components/templates/RoyalTemplate";
 import { CrimsonGoldTemplate } from "@/components/templates/CrimsonGoldTemplate";
 import { SikhFloralTemplate } from "@/components/templates/SikhFloralTemplate";
+import { MaroonGoldTemplate } from "@/components/templates/MaroonGoldTemplate";
 
 // Job / Resume templates
 import { JobProfessionalTemplate } from "@/components/templates/job/JobProfessionalTemplate";
@@ -106,6 +107,7 @@ const TAB_CATEGORIES = [
     accent: "from-red-500 to-pink-500",
     createHref: "/create",
     templates: [
+      { name: "Maroon Gold", slug: "maroon-gold", Component: MaroonGoldTemplate, data: matrimonialData },
       { name: "Sikh Floral Accent", slug: "sikh-floral", Component: SikhFloralTemplate, data: matrimonialData },
       { name: "Crimson Gold", slug: "crimson-gold", Component: CrimsonGoldTemplate, data: matrimonialData },
       { name: "Traditional Rich", slug: "classic", Component: ClassicTemplate, data: matrimonialData },

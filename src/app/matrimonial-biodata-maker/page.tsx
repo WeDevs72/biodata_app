@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 };
 
 const templates = [
+  { name: "Maroon Gold", slug: "maroon-gold", color: "from-red-900 to-yellow-600", emoji: "🏵️" },
   { name: "Royal Purple", slug: "royal", color: "from-purple-500 to-indigo-600", emoji: "👑" },
   { name: "Crimson Gold", slug: "crimson-gold", color: "from-red-600 to-yellow-500", emoji: "✨" },
   { name: "Traditional Rich", slug: "classic", color: "from-orange-500 to-rose-500", emoji: "🌺" },
@@ -39,7 +40,7 @@ const templates = [
 ];
 
 const steps = [
-  { step: "1", title: "Choose a Template", desc: "Pick from 7 beautiful matrimonial biodata templates." },
+  { step: "1", title: "Choose a Template", desc: "Pick from 8 beautiful matrimonial biodata templates." },
   { step: "2", title: "Fill Your Details", desc: "Add your personal info, family background, and partner preferences." },
   { step: "3", title: "Add Your Photo", desc: "Upload a photo to personalize your biodata." },
   { step: "4", title: "Download as PDF", desc: "Preview and download your matrimonial biodata instantly." },

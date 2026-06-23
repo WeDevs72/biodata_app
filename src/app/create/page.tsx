@@ -27,7 +27,7 @@ function CreateBiodataContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const templateQuery = searchParams.get("template");
-  const template = ["sikh-floral", "crimson-gold", "classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
+  const template = ["maroon-gold", "sikh-floral", "crimson-gold", "classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
     ? (templateQuery as any)
     : "classic";
 

@@ -30,7 +30,7 @@ export function MultiStepForm() {
   const router = useRouter();
   const pathname = usePathname();
   const templateQuery = searchParams.get("template");
-  const template = ["sikh-floral", "crimson-gold", "classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
+  const template = ["maroon-gold", "sikh-floral", "crimson-gold", "classic", "modern", "minimal", "elegant", "royal"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "classic";
 
@@ -338,6 +338,7 @@ export function MultiStepForm() {
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Choose a Template</label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {[
+                      { name: "Maroon Gold", slug: "maroon-gold" },
                       { name: "Sikh Floral Accent", slug: "sikh-floral" },
                       { name: "Crimson Gold", slug: "crimson-gold" },
                       { name: "Traditional Rich", slug: "classic" },

@@ -37,6 +37,7 @@ const CAT_COLORS: Record<Category, string> = {
 
 const TEMPLATE_NAMES: Record<string, string> = {
   // Matrimonial
+  "maroon-gold_Matrimonial": "Maroon Gold",
   "sikh-floral_Matrimonial": "Sikh Floral Accent",
   "crimson-gold_Matrimonial": "Crimson Gold",
   "classic_Matrimonial": "Traditional Rich",
@@ -70,6 +71,7 @@ export function getFriendlyName(slug: string, category: Category): string {
 
 const PREDEFINED_SLUGS: Record<Category, { slug: string; label: string }[]> = {
   "Matrimonial": [
+    { slug: "maroon-gold", label: "Maroon Gold" },
     { slug: "sikh-floral", label: "Sikh Floral Accent" },
     { slug: "crimson-gold", label: "Crimson Gold" },
     { slug: "classic", label: "Traditional Rich" },

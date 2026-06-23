@@ -30,6 +30,7 @@ export const metadata: Metadata = {
 };
 
 const formats = [
+  { name: "Maroon Gold", slug: "maroon-gold", color: "from-red-900 to-yellow-700", emoji: "🏵️", desc: "Rich dark maroon with gold ornaments — traditional Indian style" },
   { name: "Hindu Traditional", slug: "classic", color: "from-orange-500 to-red-500", emoji: "🔱", desc: "Classic format with auspicious design and family details" },
   { name: "Modern Minimal", slug: "minimal", color: "from-amber-400 to-yellow-500", emoji: "⭐", desc: "Clean and modern format preferred by urban families" },
   { name: "Sikh Format", slug: "sikh-floral", color: "from-orange-600 to-amber-500", emoji: "🙏", desc: "Traditional Sikh matrimonial format with floral accents" },
