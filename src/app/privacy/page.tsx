@@ -190,7 +190,7 @@ export default function PrivacyPage() {
                   If you have generated a biodata and wish to have all related personal records, photos, and entries **permanently deleted** from our Supabase servers, simply email us at:
                 </p>
                 <p className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center">
-                  <a href="mailto:biodataearth@gmaill.com" className="text-base font-bold text-rose-500 hover:underline">
+                  <a href="mailto:biodataearth@gmail.com" className="text-base font-bold text-rose-500 hover:underline">
                     biodataearth@gmaill.com
                   </a>
                   <br />
