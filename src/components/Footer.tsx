@@ -44,6 +44,18 @@ export function Footer() {
             </ul>
           </div>
 
+          {/* Links Group 3 - SEO Pages */}
+          <div className="md:col-span-1">
+            <h4 className="text-white font-bold mb-4 tracking-wide">Resources</h4>
+            <ul className="space-y-2">
+              <li><Link href="/matrimonial-biodata-maker" className="text-slate-400 hover:text-white transition-colors text-sm">Matrimonial Biodata Maker</Link></li>
+              <li><Link href="/marriage-biodata-format" className="text-slate-400 hover:text-white transition-colors text-sm">Marriage Biodata Format</Link></li>
+              <li><Link href="/job-resume-maker" className="text-slate-400 hover:text-white transition-colors text-sm">Job Resume Maker</Link></li>
+              <li><Link href="/business-biodata" className="text-slate-400 hover:text-white transition-colors text-sm">Business Profile Maker</Link></li>
+              <li><Link href="/biodata-in-hindi" className="text-slate-400 hover:text-white transition-colors text-sm">बायोडाटा बनाएं (Hindi)</Link></li>
+            </ul>
+          </div>
+
         </div>
 
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between">
