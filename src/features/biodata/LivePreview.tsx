@@ -7,6 +7,8 @@ import { ModernTemplate } from "@/components/templates/ModernTemplate";
 import { MinimalTemplate } from "@/components/templates/MinimalTemplate";
 import { ElegantTemplate } from "@/components/templates/ElegantTemplate";
 import { RoyalTemplate } from "@/components/templates/RoyalTemplate";
+import { CrimsonGoldTemplate } from "@/components/templates/CrimsonGoldTemplate";
+import { SikhFloralTemplate } from "@/components/templates/SikhFloralTemplate";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { Download, Loader2, AlertCircle } from "lucide-react";
@@ -45,6 +47,8 @@ export function LivePreview({ template, category = "Matrimonial" }: { template: 
 
   const renderTemplate = (data: Partial<BiodataFormValues>) => {
     switch (template) {
+      case "sikh-floral": return <SikhFloralTemplate data={data} />;
+      case "crimson-gold": return <CrimsonGoldTemplate data={data} />;
       case "classic": return <ClassicTemplate data={data} />;
       case "modern": return <ModernTemplate data={data} />;
       case "minimal": return <MinimalTemplate data={data} />;

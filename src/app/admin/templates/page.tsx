@@ -35,6 +35,65 @@ const CAT_COLORS: Record<Category, string> = {
   "Business": "#F97316",
 };
 
+const TEMPLATE_NAMES: Record<string, string> = {
+  // Matrimonial
+  "sikh-floral_Matrimonial": "Sikh Floral Accent",
+  "crimson-gold_Matrimonial": "Crimson Gold",
+  "classic_Matrimonial": "Traditional Rich",
+  "modern_Matrimonial": "Modern Floral",
+  "minimal_Matrimonial": "Minimal Gold",
+  "elegant_Matrimonial": "Elegant Emerald",
+  "royal_Matrimonial": "Royal Purple",
+  // Job Resume
+  "professional_Job Resume": "Professional",
+  "modern_Job Resume": "Modern",
+  "executive-premium_Job Resume": "Executive Premium",
+  "elegant-saffron_Job Resume": "Elegant Saffron",
+  "classic-professional_Job Resume": "Classic Professional",
+  // Business
+  "classic_Business": "Classic Gold",
+  "modern_Business": "Modern Teal",
+  "royal-indian_Business": "Royal Indian Business",
+  "startup-bold_Business": "Startup Bold",
+  "minimal-elegant_Business": "Minimal Elegant",
+};
+
+export function getFriendlyName(slug: string, category: Category): string {
+  const key = `${slug}_${category}`;
+  if (TEMPLATE_NAMES[key]) return TEMPLATE_NAMES[key];
+  // Fallback: capitalize and replace hyphens with spaces
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+const PREDEFINED_SLUGS: Record<Category, { slug: string; label: string }[]> = {
+  "Matrimonial": [
+    { slug: "sikh-floral", label: "Sikh Floral Accent" },
+    { slug: "crimson-gold", label: "Crimson Gold" },
+    { slug: "classic", label: "Traditional Rich" },
+    { slug: "modern", label: "Modern Floral" },
+    { slug: "minimal", label: "Minimal Gold" },
+    { slug: "elegant", label: "Elegant Emerald" },
+    { slug: "royal", label: "Royal Purple" },
+  ],
+  "Job Resume": [
+    { slug: "professional", label: "Professional" },
+    { slug: "modern", label: "Modern" },
+    { slug: "executive-premium", label: "Executive Premium" },
+    { slug: "elegant-saffron", label: "Elegant Saffron" },
+    { slug: "classic-professional", label: "Classic Professional" },
+  ],
+  "Business": [
+    { slug: "classic", label: "Classic Gold" },
+    { slug: "modern", label: "Modern Teal" },
+    { slug: "royal-indian", label: "Royal Indian Business" },
+    { slug: "startup-bold", label: "Startup Bold" },
+    { slug: "minimal-elegant", label: "Minimal Elegant" },
+  ]
+};
+
 export default function TemplateManagement() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [activeTab, setActiveTab] = useState<"All" | Category>("All");
@@ -43,8 +102,9 @@ export default function TemplateManagement() {
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState<"add" | "edit">("add");
+  const [customSlug, setCustomSlug] = useState("");
   const [formData, setFormData] = useState<FormData>({
-    name: "",
+    name: "classic",
     category: "Matrimonial",
     priceStr: "99",
     discountPriceStr: "",
@@ -110,12 +170,14 @@ export default function TemplateManagement() {
 
   const handleOpenAdd = () => {
     setModalMode("add");
-    setFormData({ name: "", category: "Matrimonial", priceStr: "99", discountPriceStr: "", status: "active" });
+    setCustomSlug("");
+    setFormData({ name: PREDEFINED_SLUGS["Matrimonial"][0].slug, category: "Matrimonial", priceStr: "99", discountPriceStr: "", status: "active" });
     setShowModal(true);
   };
 
   const handleOpenEdit = (t: Template) => {
     setModalMode("edit");
+    setCustomSlug("");
     setFormData({
       id: t.id,
       name: t.name,
@@ -128,7 +190,15 @@ export default function TemplateManagement() {
   };
 
   const handleSaveTemplate = async () => {
-    if (!formData.name) return alert("Name is required");
+    if (!formData.name) return alert("Template identifier is required");
+    
+    let finalSlug = formData.name;
+    if (modalMode === "add" && formData.name === "custom") {
+      if (!customSlug.trim()) return alert("Custom template slug is required");
+      // Convert to strict lowercase alphanumeric with hyphens
+      finalSlug = customSlug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    }
+
     const parsedPrice = parseFloat(formData.priceStr ?? "");
     if (isNaN(parsedPrice) || parsedPrice < 0) return alert("A valid price is required");
     const parsedDiscount = formData.discountPriceStr?.trim()
@@ -136,7 +206,7 @@ export default function TemplateManagement() {
       : null;
 
     const payload = {
-      name: formData.name,
+      name: finalSlug,
       category: formData.category,
       price: parsedPrice,
       discount_price: parsedDiscount !== null && !isNaN(parsedDiscount) ? parsedDiscount : null,
@@ -325,7 +395,12 @@ export default function TemplateManagement() {
 
                 <div className="tmpl-body">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-                    <div className="tmpl-name">{t.name}</div>
+                    <div className="tmpl-name">
+                      {getFriendlyName(t.name, t.category)}
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 'normal', fontFamily: 'monospace', marginTop: '2px' }}>
+                        slug: {t.name}
+                      </div>
+                    </div>
                     <div style={{ textAlign: 'right' }}>
                       {t.discount_price ? (
                         <>
@@ -397,29 +472,65 @@ export default function TemplateManagement() {
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label className="form-label">Template Name</label>
-                <input 
-                  type="text" 
-                  className="form-input" 
-                  placeholder="e.g. Modern Professional"
-                  value={formData.name || ""}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
                 <label className="form-label">Category</label>
                 <select 
                   className="form-select"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value as Category })}
+                  onChange={(e) => {
+                    const nextCat = e.target.value as Category;
+                    setFormData({
+                      ...formData,
+                      category: nextCat,
+                      name: PREDEFINED_SLUGS[nextCat][0]?.slug || ""
+                    });
+                  }}
                   disabled={modalMode === "edit"} // Prevent changing category for existing
                 >
                   <option value="Matrimonial">Matrimonial</option>
-                  <option value="Job Resume">Job Resume</option>
-                  <option value="Business">Business</option>
+                  <option value="Job Resume">Job / Resume</option>
+                  <option value="Business">Business Profile</option>
                 </select>
               </div>
+
+              {modalMode === "add" ? (
+                <div className="form-group">
+                  <label className="form-label">Select Template</label>
+                  <select 
+                    className="form-select"
+                    value={formData.name || ""}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  >
+                    {PREDEFINED_SLUGS[formData.category ?? "Matrimonial"].map((option) => (
+                      <option key={option.slug} value={option.slug}>
+                        {option.label} ({option.slug})
+                      </option>
+                    ))}
+                    <option value="custom">Custom Template Slug...</option>
+                  </select>
+                  
+                  {formData.name === "custom" && (
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      style={{ marginTop: '8px' }}
+                      placeholder="Enter custom slug (e.g. bold-minimal)"
+                      value={customSlug}
+                      onChange={(e) => setCustomSlug(e.target.value)}
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="form-group">
+                  <label className="form-label">Template Details</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={`${getFriendlyName(formData.name || "", formData.category || "Matrimonial")} (${formData.name})`}
+                    disabled
+                    style={{ opacity: 0.7 }}
+                  />
+                </div>
+              )}
 
               <div className="form-row">
                 <div className="form-group">
