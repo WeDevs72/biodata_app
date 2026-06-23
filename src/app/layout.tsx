@@ -135,6 +135,77 @@ const jsonLd = {
   ],
 };
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What is BioDataEarth?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "BioDataEarth is a free online biodata maker that helps you create professional biodatas for matrimonial, job/resume, and business purposes. You can fill in your details, choose from beautiful templates, and download your biodata as a PDF instantly — no account needed.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I make a matrimonial biodata online?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Simply click on Matrimonial on the homepage, choose a template you like, fill in your personal, family, and partner preference details, add a photo, and download your biodata as a PDF — all in under 5 minutes!",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is BioDataEarth completely free to use?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes! Creating and downloading biodatas on BioDataEarth is completely free. We offer premium templates with a one-time payment for those who want exclusive designs.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I download my biodata as a PDF?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Absolutely. Once you fill in your details and choose a template, you can preview your biodata in real-time and download it as a high-quality PDF with a single click.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What types of biodatas can I create?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "BioDataEarth supports three categories: (1) Matrimonial biodata for marriage purposes, (2) Job / Resume biodata for job applications, and (3) Business Profile biodata for showcasing your business.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Is my personal data safe on BioDataEarth?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. Your data is processed securely. We do not sell or share your personal information. You can request deletion of your data anytime by emailing us at biodataearth@gmail.com.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I use BioDataEarth in Hindi?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes! You can type your details in Hindi while filling the form and the biodata PDF will be generated with your Hindi content.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How is a biodata different from a resume?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "A resume focuses on your professional skills, experience, and education for job applications. A biodata is more personal — commonly used in India for matrimonial purposes, it includes personal details, family background, horoscope info, and partner preferences.",
+      },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -149,6 +220,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-950 font-sans">

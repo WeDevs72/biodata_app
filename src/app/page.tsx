@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle2, ShieldCheck, Layers, ChevronLeft, ChevronRight, Users, Briefcase, Building2, FileText, MousePointerClick, FileEdit, Download } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Layers, ChevronLeft, ChevronRight, Users, Briefcase, Building2, FileText, MousePointerClick, FileEdit, Download, Plus, Minus } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -182,6 +182,43 @@ export default function Home() {
 
   const staggerContainer = { animate: { transition: { staggerChildren: 0.1 } } };
   const fadeIn = { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.5 } };
+
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const faqs = [
+    {
+      q: "What is BioDataEarth?",
+      a: "BioDataEarth is a free online biodata maker that helps you create professional biodatas for matrimonial, job/resume, and business purposes. You can fill in your details, choose from beautiful templates, and download your biodata as a PDF instantly — no account needed.",
+    },
+    {
+      q: "How do I make a matrimonial biodata online?",
+      a: "Simply click on 'Matrimonial' on the homepage, choose a template you like, fill in your personal, family, and partner preference details, add a photo, and download your biodata as a PDF — all in under 5 minutes!",
+    },
+    {
+      q: "Is BioDataEarth completely free to use?",
+      a: "Yes! Creating and downloading biodatas on BioDataEarth is completely free. We offer premium templates with a one-time payment for those who want exclusive designs.",
+    },
+    {
+      q: "Can I download my biodata as a PDF?",
+      a: "Absolutely. Once you fill in your details and choose a template, you can preview your biodata in real-time and download it as a high-quality PDF with a single click.",
+    },
+    {
+      q: "What types of biodatas can I create?",
+      a: "BioDataEarth supports three categories: (1) Matrimonial biodata for marriage purposes, (2) Job / Resume biodata for job applications, and (3) Business Profile biodata for showcasing your business.",
+    },
+    {
+      q: "Is my personal data safe on BioDataEarth?",
+      a: "Yes. Your data is processed securely. We do not sell or share your personal information. You can request deletion of your data anytime by emailing us at biodataearth@gmail.com.",
+    },
+    {
+      q: "Can I use BioDataEarth in Hindi?",
+      a: "Yes! You can type your details in Hindi while filling the form and the biodata PDF will be generated with your Hindi content. We are also working on a full Hindi interface.",
+    },
+    {
+      q: "How is a biodata different from a resume?",
+      a: "A resume focuses on your professional skills, experience, and education for job applications. A biodata is more personal — commonly used in India for matrimonial purposes, it includes personal details, family background, horoscope info, and partner preferences.",
+    },
+  ];
 
   const features = [
     { icon: <CheckCircle2 className="w-8 h-8 text-rose-500 mb-4" />, title: "Fast & Easy", description: "Fill a simple form and generate a stunning biodata instantly. No design skills required." },
@@ -500,6 +537,78 @@ export default function Home() {
                   <div className="p-4 bg-rose-100 dark:bg-rose-950/50 rounded-2xl mb-2">{feature.icon}</div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{feature.description}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAQ Section ───────────────────────────────────────────────────── */}
+        <section className="py-24 bg-white dark:bg-slate-950">
+          <div className="container mx-auto px-4 md:px-6 max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-14"
+            >
+              <span className="inline-block px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 text-sm font-semibold mb-4">
+                Got Questions?
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                Frequently Asked Questions
+              </h2>
+              <p className="mt-3 text-slate-500 dark:text-slate-400">
+                Everything you need to know about BioDataEarth.
+              </p>
+            </motion.div>
+
+            <div className="space-y-3">
+              {faqs.map((faq, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.05, duration: 0.4 }}
+                  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
+                    openFaq === idx
+                      ? "border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/20 shadow-md"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-rose-200 dark:hover:border-rose-800"
+                  }`}
+                >
+                  <button
+                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
+                    aria-expanded={openFaq === idx}
+                  >
+                    <span className="text-base font-semibold text-slate-900 dark:text-white leading-snug">
+                      {faq.q}
+                    </span>
+                    <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      openFaq === idx
+                        ? "bg-rose-500 text-white"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                    }`}>
+                      {openFaq === idx ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {openFaq === idx && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                      >
+                        <p className="px-6 pb-5 text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+                          {faq.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               ))}
             </div>
