@@ -191,7 +191,7 @@ export default function PrivacyPage() {
                 </p>
                 <p className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center">
                   <a href="mailto:biodataearth@gmail.com" className="text-base font-bold text-rose-500 hover:underline">
-                    biodataearth@gmaill.com
+                    biodataearth@gmail.com
                   </a>
                   <br />
                   <span className="text-xs text-slate-400 mt-1 block">Specify your Full Name, category, and creation date in the message.</span>

@@ -187,7 +187,7 @@ export default function TermsPage() {
                 </p>
                 <p className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-center">
                   <a href="mailto:biodataearth@gmail.com" className="text-base font-bold text-rose-500 hover:underline">
-                    biodataearth@gmaill.com
+                    biodataearth@gmail.com
                   </a>
                 </p>
               </section>
