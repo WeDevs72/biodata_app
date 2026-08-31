@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://biodataearth.com";
+const BASE_URL = "https://www.biodataearth.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
