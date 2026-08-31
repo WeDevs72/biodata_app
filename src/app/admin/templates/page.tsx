@@ -154,8 +154,8 @@ export default function TemplateManagement() {
           color: CAT_COLORS[t.category as Category] || "#8B5CF6",
           price: t.price,
           discount_price: t.discount_price,
-          price_usd: usdPricing.price !== undefined ? usdPricing.price : undefined,
-          discount_price_usd: usdPricing.discount_price !== undefined ? usdPricing.discount_price : undefined,
+          price_usd: t.price_usd !== undefined && t.price_usd !== null ? t.price_usd : (usdPricing.price !== undefined ? usdPricing.price : undefined),
+          discount_price_usd: t.discount_price_usd !== undefined && t.discount_price_usd !== null ? t.discount_price_usd : (usdPricing.discount_price !== undefined ? usdPricing.discount_price : undefined),
         };
       });
       setTemplates(mapped);
@@ -262,7 +262,9 @@ export default function TemplateManagement() {
       category: formData.category,
       price: parsedPrice,
       discount_price: parsedDiscount !== null && !isNaN(parsedDiscount) ? parsedDiscount : null,
-      is_active: formData.status === "active"
+      is_active: formData.status === "active",
+      price_usd: parsedPriceUSD !== null && !isNaN(parsedPriceUSD) ? parsedPriceUSD : null,
+      discount_price_usd: parsedDiscountUSD !== null && !isNaN(parsedDiscountUSD) ? parsedDiscountUSD : null
     };
 
     const key = `${finalSlug}_${formData.category}`;

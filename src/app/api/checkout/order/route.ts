@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     // Fetch template price configuration from database
     const { data: templateRow } = await supabase
       .from('templates')
-      .select('price, discount_price')
+      .select('price, discount_price, price_usd, discount_price_usd')
       .eq('name', templateName)
       .eq('category', category)
       .maybeSingle();
@@ -58,9 +58,11 @@ export async function POST(req: Request) {
     if (currencyUpper === "USD") {
       const key = `${templateName}_${category}`;
       const usdPricing = settings.templatePricesUSD?.[key] || {};
-      let usdPrice = usdPricing.discount_price !== null && usdPricing.discount_price !== undefined 
-        ? usdPricing.discount_price 
-        : usdPricing.price;
+      
+      // Try database columns first, then fall back to settings JSON for backward compatibility
+      let usdPrice = templateRow && templateRow.price_usd !== null && templateRow.price_usd !== undefined
+        ? (templateRow.discount_price_usd !== null && templateRow.discount_price_usd !== undefined ? templateRow.discount_price_usd : templateRow.price_usd)
+        : (usdPricing.discount_price !== null && usdPricing.discount_price !== undefined ? usdPricing.discount_price : usdPricing.price);
 
       if (usdPrice === null || usdPrice === undefined || isNaN(Number(usdPrice))) {
         if (category === "Matrimonial") {

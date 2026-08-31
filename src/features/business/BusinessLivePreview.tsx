@@ -19,7 +19,12 @@ export function BusinessLivePreview({ template }: { template: string }) {
   const formValues = watch();
   const [isGenerating, setIsGenerating] = useState(false);
   const [validationError, setValidationError] = useState("");
-  const [templatePrice, setTemplatePrice] = useState<{ price: number, discount_price: number | null }>({ price: 99, discount_price: null });
+  const [templatePrice, setTemplatePrice] = useState<{
+    price: number;
+    discount_price: number | null;
+    price_usd?: number | null;
+    discount_price_usd?: number | null;
+  }>({ price: 99, discount_price: null, price_usd: null, discount_price_usd: null });
   const [isPaid, setIsPaid] = useState(false);
   const [isIndia, setIsIndia] = useState(true);
   const [prices, setPrices] = useState({ inr: 89, usd: 2.00 });
@@ -35,9 +40,9 @@ export function BusinessLivePreview({ template }: { template: string }) {
     } else {
       const key = `${template}_Business`;
       const usdPricing = systemSettings?.templatePricesUSD?.[key] || {};
-      const base = usdPricing.discount_price !== null && usdPricing.discount_price !== undefined
-        ? usdPricing.discount_price
-        : usdPricing.price;
+      const base = templatePrice.price_usd !== null && templatePrice.price_usd !== undefined
+        ? (templatePrice.discount_price_usd !== null && templatePrice.discount_price_usd !== undefined ? templatePrice.discount_price_usd : templatePrice.price_usd)
+        : (usdPricing.discount_price !== null && usdPricing.discount_price !== undefined ? usdPricing.discount_price : usdPricing.price);
       return base ? `$${base}` : `$${prices.usd}`;
     }
   }, [isIndia, template, templatePrice, prices, systemSettings]);
@@ -86,13 +91,18 @@ export function BusinessLivePreview({ template }: { template: string }) {
     const fetchPrice = async () => {
       const { data } = await supabase
         .from('templates')
-        .select('price, discount_price')
+        .select('price, discount_price, price_usd, discount_price_usd')
         .eq('name', template)
         .eq('category', 'Business')
         .single();
       
       if (data) {
-        setTemplatePrice({ price: data.price, discount_price: data.discount_price });
+        setTemplatePrice({ 
+          price: data.price, 
+          discount_price: data.discount_price,
+          price_usd: data.price_usd,
+          discount_price_usd: data.discount_price_usd
+        });
       }
     };
     fetchPrice();
