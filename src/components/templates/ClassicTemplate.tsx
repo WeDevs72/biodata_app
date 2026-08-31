@@ -58,7 +58,17 @@ export function ClassicTemplate({ data }: { data: Partial<BiodataFormValues> }) 
             <h2 className={`text-base font-bold underline decoration-2 underline-offset-4 mb-5 ${theme}`}>Family Details</h2>
             <div className="grid grid-cols-[140px_1fr] gap-y-3 text-sm">
               <span className="font-semibold text-slate-700">Father's Name</span> <span><span className="mr-2">:</span> {data.fatherName || "—"}</span>
+              {data.fatherOccupation && (
+                <>
+                  <span className="font-semibold text-slate-700">Father's Occupation</span> <span><span className="mr-2">:</span> {data.fatherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-slate-700">Mother's Name</span> <span><span className="mr-2">:</span> {data.motherName || "—"}</span>
+              {data.motherOccupation && (
+                <>
+                  <span className="font-semibold text-slate-700">Mother's Occupation</span> <span><span className="mr-2">:</span> {data.motherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-slate-700">Siblings</span> <span><span className="mr-2">:</span> {data.siblings || "—"}</span>
               {data.familyCustomFields?.map(f => [
                 <span key={`l-${f.id}`} className="font-semibold text-slate-700">{f.label}</span>,

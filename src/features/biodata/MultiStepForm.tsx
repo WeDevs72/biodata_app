@@ -71,7 +71,7 @@ export function MultiStepForm() {
     switch (s) {
       case 1: return ["fullName", "dob", "height", "religion", "caste", "location", "personalCustomFields"];
       case 2: return ["education", "occupation", "income", "professionalCustomFields"];
-      case 3: return ["fatherName", "motherName", "siblings", "familyCustomFields"];
+      case 3: return ["fatherName", "fatherOccupation", "motherName", "motherOccupation", "siblings", "familyCustomFields"];
       case 4: return ["preferredAge", "preferredLocation", "preferredEducation", "partnerCustomFields"];
       case 5: return ["photo"];
       default: return [];
@@ -210,14 +210,24 @@ export function MultiStepForm() {
             {step === 3 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>Father's Name/Occupation</label>
-                  <input {...register("fatherName")} className={inputClass} placeholder="e.g. Mr. Anil Sharma (Business)" />
+                  <label className={labelClass}>Father's Name</label>
+                  <input {...register("fatherName")} className={inputClass} placeholder="e.g. Mr. Anil Sharma" />
                   {errors.fatherName && <span className={errorClass}>{errors.fatherName.message}</span>}
                 </div>
                 <div>
-                  <label className={labelClass}>Mother's Name/Occupation</label>
-                  <input {...register("motherName")} className={inputClass} placeholder="e.g. Mrs. Sunita Sharma (Homemaker)" />
+                  <label className={labelClass}>Father's Occupation (Optional)</label>
+                  <input {...register("fatherOccupation")} className={inputClass} placeholder="e.g. Business" />
+                  {errors.fatherOccupation && <span className={errorClass}>{errors.fatherOccupation.message}</span>}
+                </div>
+                <div>
+                  <label className={labelClass}>Mother's Name</label>
+                  <input {...register("motherName")} className={inputClass} placeholder="e.g. Mrs. Sunita Sharma" />
                   {errors.motherName && <span className={errorClass}>{errors.motherName.message}</span>}
+                </div>
+                <div>
+                  <label className={labelClass}>Mother's Occupation (Optional)</label>
+                  <input {...register("motherOccupation")} className={inputClass} placeholder="e.g. Homemaker" />
+                  {errors.motherOccupation && <span className={errorClass}>{errors.motherOccupation.message}</span>}
                 </div>
                 <div className="col-span-1 md:col-span-2">
                   <label className={labelClass}>Siblings (Optional)</label>
@@ -286,7 +296,7 @@ export function MultiStepForm() {
             {step === 5 && (
               <div className="space-y-8">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Upload Photo</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Upload Photo (Optional)</label>
                   <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
                     {photoUrl ? (
                       <div className="flex flex-col items-center">
@@ -444,14 +454,14 @@ export function MultiStepForm() {
       <AnimatePresence>
         {saved && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="flex items-center gap-3 mt-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm font-medium"
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/90 border border-green-200 dark:border-green-800 rounded-xl text-green-800 dark:text-green-100 text-sm font-medium shadow-2xl backdrop-blur max-w-md w-[90%]"
           >
             <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-            Biodata saved! Click <span className="font-bold mx-1">Download PDF</span> in the preview panel to download.
+            <span>Biodata saved! Click <span className="font-bold">Download PDF</span> in the preview panel to download.</span>
           </motion.div>
         )}
       </AnimatePresence>

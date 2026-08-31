@@ -157,8 +157,22 @@ export function CrimsonGoldTemplate({ data }: { data: Partial<BiodataFormValues>
               <span className="font-bold text-slate-700">Father's Name</span>
               <span>: {data.fatherName || "—"}</span>
 
+              {data.fatherOccupation && (
+                <span className="contents">
+                  <span className="font-bold text-slate-700">Father's Occupation</span>
+                  <span>: {data.fatherOccupation}</span>
+                </span>
+              )}
+
               <span className="font-bold text-slate-700">Mother's Name</span>
               <span>: {data.motherName || "—"}</span>
+
+              {data.motherOccupation && (
+                <span className="contents">
+                  <span className="font-bold text-slate-700">Mother's Occupation</span>
+                  <span>: {data.motherOccupation}</span>
+                </span>
+              )}
 
               {data.siblings && (
                 <>

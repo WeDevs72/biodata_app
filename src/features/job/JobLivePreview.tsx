@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { JobFormValues } from "@/lib/jobSchema";
 import { JobProfessionalTemplate } from "@/components/templates/job/JobProfessionalTemplate";
@@ -22,13 +22,73 @@ export function JobLivePreview() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [validationError, setValidationError] = useState("");
   const [templatePrice, setTemplatePrice] = useState<{ price: number, discount_price: number | null }>({ price: 99, discount_price: null });
+  const [isPaid, setIsPaid] = useState(false);
+  const [isIndia, setIsIndia] = useState(true);
+  const [prices, setPrices] = useState({ inr: 79, usd: 1.50 });
+  const [systemSettings, setSystemSettings] = useState<any>({});
   const pdfTargetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      setIsIndia(tz === "Asia/Kolkata" || tz === "Asia/Calcutta");
+    } catch (e) {
+      setIsIndia(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const loadPrices = async () => {
+      try {
+        const res = await fetch("/api/admin/settings");
+        if (res.ok) {
+          const settings = await res.json();
+          setSystemSettings(settings);
+          setPrices({
+            inr: settings.priceJobINR !== undefined ? settings.priceJobINR : 79,
+            usd: settings.priceJobUSD !== undefined ? settings.priceJobUSD : 1.50
+          });
+        }
+      } catch (e) {
+        console.error("Failed to fetch settings", e);
+      }
+    };
+    loadPrices();
+  }, []);
+
+  useEffect(() => {
+    const checkPaid = async () => {
+      if (formValues.recordId) {
+        const { paid } = await checkPaymentStatus(formValues.recordId);
+        setIsPaid(paid);
+      } else {
+        setIsPaid(false);
+      }
+    };
+    checkPaid();
+  }, [formValues.recordId]);
 
   const searchParams = useSearchParams();
   const templateQuery = searchParams.get("template");
   const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "professional";
+
+  const resolvedPrice = useMemo(() => {
+    if (isIndia) {
+      const base = templatePrice.discount_price !== null && templatePrice.discount_price !== undefined
+        ? templatePrice.discount_price
+        : templatePrice.price;
+      return base ? `₹${base}` : `₹${prices.inr}`;
+    } else {
+      const key = `${template}_Job Resume`;
+      const usdPricing = systemSettings?.templatePricesUSD?.[key] || {};
+      const base = usdPricing.discount_price !== null && usdPricing.discount_price !== undefined
+        ? usdPricing.discount_price
+        : usdPricing.price;
+      return base ? `$${base}` : `$${prices.usd}`;
+    }
+  }, [isIndia, template, templatePrice, prices, systemSettings]);
 
   useEffect(() => {
     const fetchPrice = async () => {
@@ -66,7 +126,11 @@ export function JobLivePreview() {
       const res = await fetch("/api/checkout/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recordId, category: "Job Resume" }),
+        body: JSON.stringify({
+          recordId,
+          category: "Job Resume",
+          currency: isIndia ? "INR" : "USD"
+        }),
       });
       const order = await res.json();
 
@@ -144,6 +208,7 @@ export function JobLivePreview() {
         // 2. Trigger Razorpay if not paid
         await initiatePayment(formValues.recordId);
       }
+      setIsPaid(true);
 
       // 3. Give the browser a moment to fully close the Razorpay modal before
       //    opening the print dialog. Without this delay, some browsers block the
@@ -196,7 +261,7 @@ export function JobLivePreview() {
             <div className={`flex items-center gap-2 ${!isGenerating ? "" : "hidden"}`}>
               <Download className="w-5 h-5" />
               <span>Download PDF</span>
-              <span className="bg-white/20 px-2 py-0.5 rounded-md text-sm border border-white/10">₹{templatePrice.discount_price || templatePrice.price}</span>
+              <span className="bg-white/20 px-2 py-0.5 rounded-md text-sm border border-white/10">{resolvedPrice}</span>
             </div>
           </button>
         </div>
@@ -208,7 +273,7 @@ export function JobLivePreview() {
         </div>
       )}
 
-      <div className="overflow-y-auto w-full bg-slate-50 dark:bg-black/30 p-4 md:p-8" style={{ height: "calc(100vh - 220px)", minHeight: "500px" }}>
+      <div className="relative overflow-y-auto w-full bg-slate-50 dark:bg-black/30 p-4 md:p-8" style={{ height: "calc(100vh - 220px)", minHeight: "500px" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={template}
@@ -216,12 +281,44 @@ export function JobLivePreview() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
             transition={{ duration: 0.4 }}
-            className="w-full max-w-[800px] shadow-2xl mx-auto rounded-md overflow-hidden bg-white origin-top"
+            className="w-full max-w-[800px] shadow-2xl mx-auto rounded-md overflow-hidden bg-white origin-top relative"
             style={{ transformOrigin: "top center", zoom: "75%" }}
           >
             {renderTemplate(formValues)}
+
+            {/* 70% blur from below for unpaid previews */}
+            {!isPaid && (
+              <div 
+                className="absolute left-0 right-0 bottom-0 pointer-events-none"
+                style={{
+                  height: "70%",
+                  background: "linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4) 15%, rgba(255, 255, 255, 0.9) 70%, white 100%)",
+                  backdropFilter: "blur(6px)",
+                  WebkitBackdropFilter: "blur(6px)",
+                  zIndex: 20
+                }}
+              />
+            )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Call to action overlay message on the preview itself */}
+        {!isPaid && (
+          <div className="absolute inset-x-0 bottom-10 flex flex-col items-center justify-center p-6 text-center z-30 pointer-events-none">
+            <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur shadow-2xl rounded-2xl p-6 max-w-sm border border-slate-200/50 dark:border-slate-800/50 pointer-events-auto transform translate-y-2">
+              <h4 className="font-bold text-slate-800 dark:text-white text-base mb-1">Preview Blurred</h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+                This is a preview. Download the high-quality, watermark-free PDF to unlock and view the complete resume.
+              </p>
+              <button
+                onClick={handleDownload}
+                className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-sm font-bold shadow-md hover:opacity-90 active:scale-95 transition-all"
+              >
+                Unlock & Download ({resolvedPrice})
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div

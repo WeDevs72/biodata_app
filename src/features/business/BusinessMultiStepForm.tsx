@@ -204,7 +204,7 @@ export function BusinessMultiStepForm() {
             {step === 4 && (
               <div className="space-y-8">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Upload Logo / Photo</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Upload Logo / Photo (Optional)</label>
                   <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50">
                     {photoUrl ? (
                       <div className="flex flex-col items-center">
@@ -325,9 +325,15 @@ export function BusinessMultiStepForm() {
 
       <AnimatePresence>
         {saved && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} transition={{ duration: 0.3 }} className="flex items-center gap-3 mt-4 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm font-medium">
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/90 border border-green-200 dark:border-green-800 rounded-xl text-green-800 dark:text-green-100 text-sm font-medium shadow-2xl backdrop-blur max-w-md w-[90%]"
+          >
             <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
-            Business profile saved! Click <span className="font-bold mx-1">Download PDF</span> in the preview panel.
+            <span>Business profile saved! Click <span className="font-bold">Download PDF</span> in the preview panel.</span>
           </motion.div>
         )}
       </AnimatePresence>

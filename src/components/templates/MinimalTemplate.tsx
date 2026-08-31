@@ -60,7 +60,17 @@ export function MinimalTemplate({ data }: { data: Partial<BiodataFormValues> }) 
             <h2 className={`text-[15px] font-bold uppercase tracking-widest ${theme} mb-6`}>Family Details</h2>
             <div className="grid grid-cols-[150px_1fr] gap-y-4 text-[15px]">
               <span className="font-semibold text-amber-900/80">Father's Name</span> <span>{data.fatherName || "—"}</span>
+              {data.fatherOccupation && (
+                <>
+                  <span className="font-semibold text-amber-900/80">Father's Occupation</span> <span>{data.fatherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-amber-900/80">Mother's Name</span> <span>{data.motherName || "—"}</span>
+              {data.motherOccupation && (
+                <>
+                  <span className="font-semibold text-amber-900/80">Mother's Occupation</span> <span>{data.motherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-amber-900/80">Siblings</span> <span>{data.siblings || "—"}</span>
               {data.familyCustomFields?.map(f => [
                 <span key={`l-${f.id}`} className="font-semibold text-amber-900/80">{f.label}</span>,

@@ -232,80 +232,175 @@ export default function Home() {
     <>
       <Header />
       <main className="flex-1 flex flex-col notranslate">
-
-        {/* ── Hero Section ────────────────────────────────────────────────── */}
-        <section className="relative px-4 min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-50 via-orange-100/50 to-white dark:from-orange-950/30 dark:via-slate-900 dark:to-slate-950 py-20">
-          {/* Decorative glow blobs */}
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-orange-400/20 blur-3xl -z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-rose-400/20 blur-3xl -z-10 pointer-events-none" />
-
-          <div className="container mx-auto grid lg:grid-cols-2 gap-12 lg:gap-8 items-center z-10">
-            {/* Left side text content */}
-            <motion.div initial="initial" animate="animate" variants={staggerContainer} className="space-y-8 text-center lg:text-left">
-              <motion.h1 variants={fadeIn} className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
-                Create Your Biodata in <br className="hidden lg:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">Minutes</span>
-              </motion.h1>
-
-              <motion.p variants={fadeIn} className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Matrimonial, Job Resume, or Business Profile — beautiful templates, instant PDF download.
-              </motion.p>
-
-              {/* Mobile CTA buttons — visible only below lg, where floating templates are hidden */}
-              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:hidden pt-2">
-                <button onClick={() => handleScrollToTemplates('matrimonial')} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-rose-500 text-white font-semibold shadow-md hover:bg-rose-600 transition-colors">
-                  <Users className="w-4 h-4" /> Matrimonial
-                </button>
-                <button onClick={() => handleScrollToTemplates('job')} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-indigo-500 text-white font-semibold shadow-md hover:bg-indigo-600 transition-colors">
-                  <Briefcase className="w-4 h-4" /> Job Resume
-                </button>
-                <button onClick={() => handleScrollToTemplates('business')} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-amber-500 text-white font-semibold shadow-md hover:bg-amber-600 transition-colors">
-                  <Building2 className="w-4 h-4" /> Business
-                </button>
-              </motion.div>
+        <section className="relative px-4 min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-50 via-orange-100/50 to-white dark:from-orange-950/20 dark:via-slate-900 dark:to-slate-950 py-20">
+          {/* Floating Meaningful Objects in background (representing Matrimonial, Career/Resume, and Business Profiles) */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+            {/* Heart Shape (Matrimonial/Marriage) */}
+            <motion.div
+              animate={{ y: [0, -25, 0], rotate: [0, 10, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+              className="absolute top-[12%] left-[8%] opacity-20 dark:opacity-[0.07] text-rose-500"
+            >
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" fillOpacity="0.1" />
+              </svg>
             </motion.div>
 
-            {/* Right side floating scattered buttons */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="relative mx-auto hidden lg:flex items-center justify-center w-full max-w-[600px] h-[700px]">
+            {/* Intersecting Rings (Matrimonial/Marriage) */}
+            <motion.div
+              animate={{ y: [0, 20, 0], rotate: [0, -15, 15, 0] }}
+              transition={{ repeat: Infinity, duration: 9, ease: "easeInOut", delay: 1 }}
+              className="absolute top-[65%] right-[42%] opacity-15 dark:opacity-[0.05] text-pink-500"
+            >
+              <svg width="80" height="80" viewBox="0 0 100 60" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="35" cy="30" r="22" fill="currentColor" fillOpacity="0.05" />
+                <circle cx="65" cy="30" r="22" fill="currentColor" fillOpacity="0.05" />
+              </svg>
+            </motion.div>
 
-              {/* Central glowing blur */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-orange-400 to-rose-400 rounded-full opacity-20 blur-[80px]" />
+            {/* Graduation Cap (Resume/Job Career) */}
+            <motion.div
+              animate={{ y: [0, 15, 0], rotate: [0, 12, -12, 0] }}
+              transition={{ repeat: Infinity, duration: 7, ease: "easeInOut", delay: 2 }}
+              className="absolute top-[20%] left-[45%] opacity-20 dark:opacity-[0.07] text-indigo-500"
+            >
+              <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" fill="currentColor" fillOpacity="0.1" />
+                <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+              </svg>
+            </motion.div>
+
+            {/* Briefcase (Job/Resume) */}
+            <motion.div
+              animate={{ y: [0, -20, 0], rotate: [0, -8, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 8.5, ease: "easeInOut", delay: 0.5 }}
+              className="absolute bottom-[15%] left-[25%] opacity-15 dark:opacity-[0.05] text-violet-500"
+            >
+              <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" fill="currentColor" fillOpacity="0.1" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </motion.div>
+
+            {/* Business Globe (Business Connection/Profile) */}
+            <motion.div
+              animate={{ y: [0, 25, 0], rotate: [0, 20, -20, 0] }}
+              transition={{ repeat: Infinity, duration: 10, ease: "easeInOut", delay: 1.5 }}
+              className="absolute top-[45%] left-[2%] opacity-15 dark:opacity-[0.05] text-amber-500"
+            >
+              <svg width="76" height="76" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" fill="currentColor" fillOpacity="0.05" />
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                <path d="M2 12h20" />
+              </svg>
+            </motion.div>
+
+            {/* Growth / Chart (Business Profile Success) */}
+            <motion.div
+              animate={{ y: [0, -18, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ repeat: Infinity, duration: 7.5, ease: "easeInOut", delay: 3 }}
+              className="absolute top-[8%] right-[10%] opacity-20 dark:opacity-[0.07] text-emerald-500"
+            >
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 3v18h18" />
+                <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3" fill="none" />
+              </svg>
+            </motion.div>
+
+            {/* Traditional Mandala Watermark outline (Indian cultural aesthetic) */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
+              className="absolute bottom-[-10%] right-[-5%] opacity-10 dark:opacity-[0.03] text-orange-500"
+            >
+              <svg width="250" height="250" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.8">
+                <circle cx="50" cy="50" r="45" strokeDasharray="2,2" />
+                <circle cx="50" cy="50" r="35" />
+                <circle cx="50" cy="50" r="25" strokeDasharray="3,3" />
+                <circle cx="50" cy="50" r="15" />
+                <path d="M50 5 L50 95 M5 50 L95 50 M18 18 L82 82 M18 82 L82 18" />
+                <path d="M50 15 A35 35 0 0 1 85 50 A35 35 0 0 1 50 85 A35 35 0 0 1 15 50 A35 35 0 0 1 50 15 Z" strokeDasharray="1,1" />
+              </svg>
+            </motion.div>
+          </div>
+
+          {/* Decorative glow blobs */}
+          <div className="absolute top-1/4 right-0 w-[450px] h-[450px] rounded-full bg-orange-400/25 dark:bg-orange-500/10 blur-3xl -z-10 pointer-events-none animate-pulse" style={{ animationDuration: '8s' }} />
+          <div className="absolute bottom-1/4 left-0 w-[450px] h-[450px] rounded-full bg-rose-400/25 dark:bg-rose-500/10 blur-3xl -z-10 pointer-events-none animate-pulse" style={{ animationDuration: '12s' }} />
+
+          <div className="container mx-auto grid lg:grid-cols-12 gap-12 lg:gap-8 items-center z-10">
+            {/* Left side text content */}
+            <motion.div initial="initial" animate="animate" variants={staggerContainer} className="lg:col-span-7 space-y-8 text-center lg:text-left">
+
+
+              <motion.h1 variants={fadeIn} className="text-5xl sm:text-6xl lg:text-[5.5rem] font-black tracking-tight text-slate-900 dark:text-white leading-[1.05]">
+                Create Your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-rose-500 to-indigo-600">Biodata</span> <br />
+                in Minutes.
+              </motion.h1>
+
+              <motion.p variants={fadeIn} className="text-lg md:text-xl text-slate-600 dark:text-slate-350 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                Matrimonial, Job Resume, or Business Profile — stunning premium templates, real-time live preview, and instant PDF downloads.
+              </motion.p>
+
+              {/* Desktop & Mobile CTA buttons */}
+              <motion.div variants={fadeIn} className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start pt-2">
+                <button onClick={() => handleScrollToTemplates('matrimonial')} className="relative group inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 hover:-translate-y-0.5 active:scale-98 transition-all duration-200 cursor-pointer">
+                  <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span>Matrimonial</span>
+                </button>
+                <button onClick={() => handleScrollToTemplates('job')} className="relative group inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:scale-98 transition-all duration-200 cursor-pointer">
+                  <Briefcase className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span>Job Resume</span>
+                </button>
+                <button onClick={() => handleScrollToTemplates('business')} className="relative group inline-flex items-center justify-center gap-2.5 px-7 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 active:scale-98 transition-all duration-200 cursor-pointer">
+                  <Building2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span>Business Profile</span>
+                </button>
+              </motion.div>
+
+
+
+            </motion.div>
+
+            {/* Right side floating scattered template previews */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.2 }} className="lg:col-span-5 relative mx-auto hidden lg:flex items-center justify-center w-full max-w-[500px] h-[650px]">
+
+              {/* Central glowing background blur */}
+              <div className="absolute w-[350px] h-[350px] bg-gradient-to-tr from-orange-400 to-rose-500 rounded-full opacity-30 dark:opacity-20 blur-[80px] -z-10" />
 
               {/* Matrimonial Floating Template */}
-              <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }} className="absolute z-30 top-[5%] left-[5%]">
-                <button onClick={() => handleScrollToTemplates('matrimonial')} className="block relative w-[220px] h-[310px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(225,29,72,0.4)] border border-rose-200 dark:border-rose-800 bg-white transform -rotate-6 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
-                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
+              <motion.div animate={{ y: [0, -12, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }} className="absolute z-30 top-[4%] left-[-8%]">
+                <button onClick={() => handleScrollToTemplates('matrimonial')} className="block relative w-[210px] h-[297px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(225,29,72,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] border border-rose-200/50 dark:border-slate-800 bg-white transform -rotate-6 hover:rotate-0 hover:scale-105 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
+                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.264)' }}>
                     <RoyalTemplate data={matrimonialData} />
                   </div>
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-rose-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white text-rose-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Matrimonial <ChevronRight className="w-4 h-4" /></span>
+                  <div className="absolute inset-0 bg-rose-950/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="bg-white text-rose-600 font-bold px-4 py-2 rounded-full text-xs shadow-xl flex items-center gap-1">Matrimonial <ChevronRight className="w-3.5 h-3.5" /></span>
                   </div>
                 </button>
               </motion.div>
 
               {/* Job Resume Floating Template */}
-              <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 1 }} className="absolute z-20 top-[35%] right-[5%] ">
-                <button onClick={() => handleScrollToTemplates('job')} className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(79,70,229,0.4)] border border-indigo-200 dark:border-indigo-800 bg-white transform rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
-                  <div className="w-[794px] h-[1142px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
+              <motion.div animate={{ y: [0, 12, 0] }} transition={{ repeat: Infinity, duration: 6, ease: "easeInOut", delay: 1 }} className="absolute z-20 top-[32%] right-[-10%]">
+                <button onClick={() => handleScrollToTemplates('job')} className="block relative w-[210px] h-[297px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(79,70,229,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] border border-indigo-200/50 dark:border-slate-800 bg-white transform rotate-6 hover:rotate-0 hover:scale-105 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
+                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.264)' }}>
                     <JobProfessionalTemplate data={jobData as any} />
                   </div>
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-indigo-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white text-indigo-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Resume <ChevronRight className="w-4 h-4" /></span>
+                  <div className="absolute inset-0 bg-indigo-950/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="bg-white text-indigo-600 font-bold px-4 py-2 rounded-full text-xs shadow-xl flex items-center gap-1">Resume <ChevronRight className="w-3.5 h-3.5" /></span>
                   </div>
                 </button>
               </motion.div>
 
               {/* Business Profile Floating Template */}
-              <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.5 }} className="absolute z-10 top-[65%] left-[10%]">
-                <button onClick={() => handleScrollToTemplates('business')} className="block relative w-[220px] h-[295px] rounded-1xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(245,158,11,0.4)] border border-amber-200 dark:border-amber-800 bg-white transform -rotate-3 hover:rotate-0 hover:scale-110 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
-                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.277)' }}>
+              <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut", delay: 2.2 }} className="absolute z-10 top-[60%] left-[-4%]">
+                <button onClick={() => handleScrollToTemplates('business')} className="block relative w-[210px] h-[297px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(245,158,11,0.3)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.7)] border border-amber-200/50 dark:border-slate-800 bg-white transform -rotate-3 hover:rotate-0 hover:scale-105 hover:z-50 transition-all duration-300 group text-left cursor-pointer">
+                  <div className="w-[794px] h-[1122px] origin-top-left absolute top-0 left-0 pointer-events-none transition-transform duration-500" style={{ transform: 'scale(0.264)' }}>
                     <BusinessModernTemplate data={businessData as any} />
                   </div>
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-amber-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white text-amber-600 font-bold px-4 py-2 rounded-full text-sm shadow-xl flex items-center gap-1">Business <ChevronRight className="w-4 h-4" /></span>
+                  <div className="absolute inset-0 bg-amber-950/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="bg-white text-amber-600 font-bold px-4 py-2 rounded-full text-xs shadow-xl flex items-center gap-1">Business <ChevronRight className="w-3.5 h-3.5" /></span>
                   </div>
                 </button>
               </motion.div>
@@ -574,11 +669,10 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05, duration: 0.4 }}
-                  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
-                    openFaq === idx
-                      ? "border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/20 shadow-md"
-                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-rose-200 dark:hover:border-rose-800"
-                  }`}
+                  className={`rounded-2xl border transition-all duration-300 overflow-hidden ${openFaq === idx
+                    ? "border-rose-200 dark:border-rose-800 bg-rose-50/50 dark:bg-rose-950/20 shadow-md"
+                    : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-rose-200 dark:hover:border-rose-800"
+                    }`}
                 >
                   <button
                     onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
@@ -588,11 +682,10 @@ export default function Home() {
                     <span className="text-base font-semibold text-slate-900 dark:text-white leading-snug">
                       {faq.q}
                     </span>
-                    <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 ${
-                      openFaq === idx
-                        ? "bg-rose-500 text-white"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
-                    }`}>
+                    <span className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 ${openFaq === idx
+                      ? "bg-rose-500 text-white"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                      }`}>
                       {openFaq === idx ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
                     </span>
                   </button>

@@ -163,7 +163,9 @@ export function MaroonGoldTemplate({ data }: { data: Partial<BiodataFormValues> 
             <SectionHeader title="FAMILY DETAILS" gold={gold} />
             <div style={{ marginTop: "10px" }}>
               <DetailRow label="Father's Name" value={data.fatherName} gold={gold} />
+              {data.fatherOccupation && <DetailRow label="Father's Occupation" value={data.fatherOccupation} gold={gold} />}
               <DetailRow label="Mother's Name" value={data.motherName} gold={gold} />
+              {data.motherOccupation && <DetailRow label="Mother's Occupation" value={data.motherOccupation} gold={gold} />}
               {data.siblings && <DetailRow label="Siblings" value={data.siblings} gold={gold} />}
               {/* Custom family fields */}
               {data.familyCustomFields?.map((f) => (

@@ -19,7 +19,9 @@ export const biodataSchema = z.object({
   income: z.string().optional(),
 
   fatherName: z.string().min(1, "Father's name is required"),
+  fatherOccupation: z.string().optional(),
   motherName: z.string().min(1, "Mother's name is required"),
+  motherOccupation: z.string().optional(),
   siblings: z.string().optional(),
 
   preferredAge: z.string().optional(),

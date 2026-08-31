@@ -31,35 +31,66 @@ function CreateBiodataContent() {
     ? (templateQuery as any)
     : "classic";
 
-  // Load saved draft from localStorage on first render
-  const savedData = loadBiodata();
-
   const methods = useForm<BiodataFormValues>({
     resolver: zodResolver(biodataSchema),
     defaultValues: {
-      fullName: savedData?.fullName ?? "",
-      dob: savedData?.dob ?? "",
-      height: savedData?.height ?? "",
-      religion: savedData?.religion ?? "",
-      caste: savedData?.caste ?? "",
-      location: savedData?.location ?? "",
-      education: savedData?.education ?? "",
-      occupation: savedData?.occupation ?? "",
-      income: savedData?.income ?? "",
-      fatherName: savedData?.fatherName ?? "",
-      motherName: savedData?.motherName ?? "",
-      siblings: savedData?.siblings ?? "",
-      preferredAge: savedData?.preferredAge ?? "",
-      preferredLocation: savedData?.preferredLocation ?? "",
-      preferredEducation: savedData?.preferredEducation ?? "",
-      personalCustomFields: savedData?.personalCustomFields ?? [],
-      professionalCustomFields: savedData?.professionalCustomFields ?? [],
-      familyCustomFields: savedData?.familyCustomFields ?? [],
-      partnerCustomFields: savedData?.partnerCustomFields ?? [],
-      photo: savedData?.photo ?? "",
+      fullName: "",
+      dob: "",
+      height: "",
+      religion: "",
+      caste: "",
+      location: "",
+      education: "",
+      occupation: "",
+      income: "",
+      fatherName: "",
+      fatherOccupation: "",
+      motherName: "",
+      motherOccupation: "",
+      siblings: "",
+      preferredAge: "",
+      preferredLocation: "",
+      preferredEducation: "",
+      personalCustomFields: [],
+      professionalCustomFields: [],
+      familyCustomFields: [],
+      partnerCustomFields: [],
+      photo: "",
     },
     mode: "onChange"
   });
+
+  // Load saved draft from localStorage on client-side mount to prevent SSR hydration mismatch
+  useEffect(() => {
+    const savedData = loadBiodata();
+    if (savedData) {
+      methods.reset({
+        fullName: savedData.fullName ?? "",
+        dob: savedData.dob ?? "",
+        height: savedData.height ?? "",
+        religion: savedData.religion ?? "",
+        caste: savedData.caste ?? "",
+        location: savedData.location ?? "",
+        education: savedData.education ?? "",
+        occupation: savedData.occupation ?? "",
+        income: savedData.income ?? "",
+        fatherName: savedData.fatherName ?? "",
+        fatherOccupation: savedData.fatherOccupation ?? "",
+        motherName: savedData.motherName ?? "",
+        motherOccupation: savedData.motherOccupation ?? "",
+        siblings: savedData.siblings ?? "",
+        preferredAge: savedData.preferredAge ?? "",
+        preferredLocation: savedData.preferredLocation ?? "",
+        preferredEducation: savedData.preferredEducation ?? "",
+        personalCustomFields: savedData.personalCustomFields ?? [],
+        professionalCustomFields: savedData.professionalCustomFields ?? [],
+        familyCustomFields: savedData.familyCustomFields ?? [],
+        partnerCustomFields: savedData.partnerCustomFields ?? [],
+        photo: savedData.photo ?? "",
+        recordId: savedData.recordId,
+      });
+    }
+  }, [methods]);
 
   // Auto-save to localStorage on every change (debounced 800ms)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

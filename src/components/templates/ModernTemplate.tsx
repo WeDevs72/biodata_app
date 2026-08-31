@@ -72,7 +72,17 @@ export function ModernTemplate({ data }: { data: Partial<BiodataFormValues> }) {
             </div>
             <div className="grid grid-cols-[140px_1fr] gap-y-3.5 text-[15px]">
               <span className="font-semibold text-teal-900/70">Father's Name</span> <span className="font-medium text-slate-800">{data.fatherName || "—"}</span>
+              {data.fatherOccupation && (
+                <>
+                  <span className="font-semibold text-teal-900/70">Father's Occupation</span> <span className="font-medium text-slate-800">{data.fatherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-teal-900/70">Mother's Name</span> <span className="font-medium text-slate-800">{data.motherName || "—"}</span>
+              {data.motherOccupation && (
+                <>
+                  <span className="font-semibold text-teal-900/70">Mother's Occupation</span> <span className="font-medium text-slate-800">{data.motherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-teal-900/70">Siblings</span> <span className="font-medium text-slate-800">{data.siblings || "—"}</span>
               {data.familyCustomFields?.map(f => [
                 <span key={`l-${f.id}`} className="font-semibold text-teal-900/70">{f.label}</span>,

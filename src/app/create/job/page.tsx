@@ -31,28 +31,50 @@ function CreateJobContent() {
     ? (templateQuery as string)
     : "professional";
 
-  const savedData = loadJobBiodata();
-
   const methods = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      fullName: savedData?.fullName ?? "",
-      jobTitle: savedData?.jobTitle ?? "",
-      phone: savedData?.phone ?? "",
-      email: savedData?.email ?? "",
-      location: savedData?.location ?? "",
-      linkedIn: savedData?.linkedIn ?? "",
-      portfolio: savedData?.portfolio ?? "",
-      professionalSummary: savedData?.professionalSummary ?? "",
-      experience: savedData?.experience ?? [],
-      education: savedData?.education ?? [],
-      skills: savedData?.skills ?? "",
-      languages: savedData?.languages ?? "",
-      customFields: savedData?.customFields ?? [],
-      photo: savedData?.photo ?? "",
+      fullName: "",
+      jobTitle: "",
+      phone: "",
+      email: "",
+      location: "",
+      linkedIn: "",
+      portfolio: "",
+      professionalSummary: "",
+      experience: [],
+      education: [],
+      skills: "",
+      languages: "",
+      customFields: [],
+      photo: "",
     },
     mode: "onChange",
   });
+
+  // Load saved draft from localStorage on client-side mount to prevent SSR hydration mismatch
+  useEffect(() => {
+    const savedData = loadJobBiodata();
+    if (savedData) {
+      methods.reset({
+        fullName: savedData.fullName ?? "",
+        jobTitle: savedData.jobTitle ?? "",
+        phone: savedData.phone ?? "",
+        email: savedData.email ?? "",
+        location: savedData.location ?? "",
+        linkedIn: savedData.linkedIn ?? "",
+        portfolio: savedData.portfolio ?? "",
+        professionalSummary: savedData.professionalSummary ?? "",
+        experience: savedData.experience ?? [],
+        education: savedData.education ?? [],
+        skills: savedData.skills ?? "",
+        languages: savedData.languages ?? "",
+        customFields: savedData.customFields ?? [],
+        photo: savedData.photo ?? "",
+        recordId: savedData.recordId,
+      });
+    }
+  }, [methods]);
 
   // Auto-save draft to localStorage (debounced 800ms)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

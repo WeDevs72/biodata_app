@@ -52,7 +52,15 @@ export function RoyalTemplate({ data }: { data: Partial<BiodataFormValues> }) {
             <h2 className={`text-lg italic ${theme} mb-6 border-b border-fuchsia-900/10 pb-2 inline-block px-8`}>Family & Preferences</h2>
             <div className="grid grid-cols-2 gap-y-4 text-[15px] text-left">
               <span className="font-semibold text-fuchsia-950/70">Father :</span> <span>{data.fatherName || "—"}</span>
+              {data.fatherOccupation && [
+                <span key="father-occ-lbl" className="font-semibold text-fuchsia-950/70">Father's Occupation :</span>,
+                <span key="father-occ-val">{data.fatherOccupation}</span>
+              ]}
               <span className="font-semibold text-fuchsia-950/70">Mother :</span> <span>{data.motherName || "—"}</span>
+              {data.motherOccupation && [
+                <span key="mother-occ-lbl" className="font-semibold text-fuchsia-950/70">Mother's Occupation :</span>,
+                <span key="mother-occ-val">{data.motherOccupation}</span>
+              ]}
               <span className="font-semibold text-fuchsia-950/70">Siblings :</span> <span>{data.siblings || "—"}</span>
               {data.familyCustomFields?.map(f => [
                 <span key={`l-${f.id}`} className="font-semibold text-fuchsia-950/70">{f.label} :</span>,

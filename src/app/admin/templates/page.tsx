@@ -15,6 +15,8 @@ interface Template {
   color: string;
   price?: number;
   discount_price?: number;
+  price_usd?: number;
+  discount_price_usd?: number | null;
 }
 
 // Keep price fields as strings in the form so the input stays editable
@@ -25,6 +27,8 @@ interface FormData {
   status?: "active" | "inactive";
   priceStr?: string;          // string so typing works smoothly
   discountPriceStr?: string;  // string, optional
+  priceUSDStr?: string;       // string, optional USD price
+  discountPriceUSDStr?: string; // string, optional USD discount price
 }
 
 import { supabase } from "@/lib/supabase";
@@ -100,6 +104,7 @@ export default function TemplateManagement() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [activeTab, setActiveTab] = useState<"All" | Category>("All");
   const [isLoading, setIsLoading] = useState(true);
+  const [systemSettings, setSystemSettings] = useState<any>({});
 
   // Modal State
   const [showModal, setShowModal] = useState(false);
@@ -110,8 +115,22 @@ export default function TemplateManagement() {
     category: "Matrimonial",
     priceStr: "99",
     discountPriceStr: "",
+    priceUSDStr: "",
+    discountPriceUSDStr: "",
     status: "active"
   });
+
+  const fetchSystemSettings = async () => {
+    try {
+      const res = await fetch("/api/admin/settings");
+      if (res.ok) {
+        const data = await res.json();
+        setSystemSettings(data);
+      }
+    } catch (e) {
+      console.error("Error fetching system settings:", e);
+    }
+  };
 
   // Fetch templates from database
   const fetchTemplates = async () => {
@@ -122,25 +141,37 @@ export default function TemplateManagement() {
       .order("created_at", { ascending: false });
 
     if (!error && data) {
-      const mapped: Template[] = data.map((t: any) => ({
-        id: t.id,
-        name: t.name,
-        category: t.category as Category,
-        uses: 0, 
-        status: t.is_active ? "active" : "inactive",
-        isFeatured: false, 
-        color: CAT_COLORS[t.category as Category] || "#8B5CF6",
-        price: t.price,
-        discount_price: t.discount_price,
-      }));
+      const mapped: Template[] = data.map((t: any) => {
+        const key = `${t.name}_${t.category}`;
+        const usdPricing = systemSettings?.templatePricesUSD?.[key] || {};
+        return {
+          id: t.id,
+          name: t.name,
+          category: t.category as Category,
+          uses: 0,
+          status: t.is_active ? "active" : "inactive",
+          isFeatured: false,
+          color: CAT_COLORS[t.category as Category] || "#8B5CF6",
+          price: t.price,
+          discount_price: t.discount_price,
+          price_usd: usdPricing.price !== undefined ? usdPricing.price : undefined,
+          discount_price_usd: usdPricing.discount_price !== undefined ? usdPricing.discount_price : undefined,
+        };
+      });
       setTemplates(mapped);
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchTemplates();
+    fetchSystemSettings();
   }, []);
+
+  useEffect(() => {
+    if (systemSettings) {
+      fetchTemplates();
+    }
+  }, [systemSettings]);
 
   // Stats
   const totalUsage = useMemo(() => templates.reduce((acc, t) => acc + t.uses, 0), [templates]);
@@ -154,7 +185,7 @@ export default function TemplateManagement() {
     const template = templates.find((t) => t.id === id);
     if (!template) return;
     const newStatus = template.status === "active" ? false : true;
-    
+
     setTemplates(prev => prev.map(t => t.id === id ? { ...t, status: newStatus ? "active" : "inactive" } : t));
     await supabase.from("templates").update({ is_active: newStatus }).eq("id", id);
   };
@@ -173,19 +204,31 @@ export default function TemplateManagement() {
   const handleOpenAdd = () => {
     setModalMode("add");
     setCustomSlug("");
-    setFormData({ name: PREDEFINED_SLUGS["Matrimonial"][0].slug, category: "Matrimonial", priceStr: "99", discountPriceStr: "", status: "active" });
+    setFormData({
+      name: PREDEFINED_SLUGS["Matrimonial"][0].slug,
+      category: "Matrimonial",
+      priceStr: "99",
+      discountPriceStr: "",
+      priceUSDStr: "",
+      discountPriceUSDStr: "",
+      status: "active"
+    });
     setShowModal(true);
   };
 
   const handleOpenEdit = (t: Template) => {
     setModalMode("edit");
     setCustomSlug("");
+    const key = `${t.name}_${t.category}`;
+    const usdPricing = systemSettings?.templatePricesUSD?.[key] || {};
     setFormData({
       id: t.id,
       name: t.name,
       category: t.category,
-      priceStr: t.price !== undefined ? String(t.price) : "",
-      discountPriceStr: t.discount_price !== undefined ? String(t.discount_price) : "",
+      priceStr: t.price !== undefined && t.price !== null ? String(t.price) : "",
+      discountPriceStr: t.discount_price !== undefined && t.discount_price !== null ? String(t.discount_price) : "",
+      priceUSDStr: usdPricing.price !== undefined && usdPricing.price !== null ? String(usdPricing.price) : "",
+      discountPriceUSDStr: usdPricing.discount_price !== undefined && usdPricing.discount_price !== null ? String(usdPricing.discount_price) : "",
       status: t.status
     });
     setShowModal(true);
@@ -193,7 +236,7 @@ export default function TemplateManagement() {
 
   const handleSaveTemplate = async () => {
     if (!formData.name) return alert("Template identifier is required");
-    
+
     let finalSlug = formData.name;
     if (modalMode === "add" && formData.name === "custom") {
       if (!customSlug.trim()) return alert("Custom template slug is required");
@@ -207,6 +250,13 @@ export default function TemplateManagement() {
       ? parseFloat(formData.discountPriceStr)
       : null;
 
+    const parsedPriceUSD = formData.priceUSDStr?.trim()
+      ? parseFloat(formData.priceUSDStr)
+      : null;
+    const parsedDiscountUSD = formData.discountPriceUSDStr?.trim()
+      ? parseFloat(formData.discountPriceUSDStr)
+      : null;
+
     const payload = {
       name: finalSlug,
       category: formData.category,
@@ -215,23 +265,50 @@ export default function TemplateManagement() {
       is_active: formData.status === "active"
     };
 
+    const key = `${finalSlug}_${formData.category}`;
+    const updatedUSDTemplatePrices = {
+      ...(systemSettings?.templatePricesUSD || {}),
+      [key]: {
+        price: parsedPriceUSD !== null && !isNaN(parsedPriceUSD) ? parsedPriceUSD : null,
+        discount_price: parsedDiscountUSD !== null && !isNaN(parsedDiscountUSD) ? parsedDiscountUSD : null
+      }
+    };
+
+    const updatedSettings = {
+      ...systemSettings,
+      templatePricesUSD: updatedUSDTemplatePrices
+    };
+
     if (modalMode === "add") {
       const { error } = await supabase.from("templates").insert([payload]).select();
       if (error) {
         alert("Error creating template: " + error.message);
-      } else {
-        fetchTemplates();
-        setShowModal(false);
+        return;
       }
     } else {
       const { error } = await supabase.from("templates").update(payload).eq("id", formData.id);
       if (error) {
         alert("Error updating template: " + error.message);
-      } else {
-        fetchTemplates();
-        setShowModal(false);
+        return;
       }
     }
+
+    // Save USD prices to settings
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedSettings),
+      });
+      if (!res.ok) {
+        console.error("Failed to save USD template prices");
+      }
+    } catch (e) {
+      console.error("Error saving settings:", e);
+    }
+
+    fetchSystemSettings();
+    setShowModal(false);
   };
 
   return (
@@ -404,17 +481,33 @@ export default function TemplateManagement() {
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      {t.discount_price ? (
-                        <>
-                          <div style={{ fontSize: '14px', fontWeight: 700, color: '#10B981' }}>₹{t.discount_price}</div>
-                          <div style={{ fontSize: '10px', textDecoration: 'line-through', color: 'var(--text-secondary)' }}>₹{t.price}</div>
-                        </>
-                      ) : (
-                        <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>₹{t.price}</div>
-                      )}
+                      {/* INR Price */}
+                      <div>
+                        {t.discount_price ? (
+                          <>
+                            <span style={{ fontSize: '14px', fontWeight: 700, color: '#10B981' }}>₹{t.discount_price}</span>
+                            <span style={{ fontSize: '10px', textDecoration: 'line-through', color: 'var(--text-secondary)', marginLeft: '4px' }}>₹{t.price}</span>
+                          </>
+                        ) : (
+                          <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>₹{t.price}</span>
+                        )}
+                      </div>
+                      {/* USD Price */}
+                      <div style={{ marginTop: '2px' }}>
+                        {t.discount_price_usd ? (
+                          <>
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#10B981' }}>${t.discount_price_usd}</span>
+                            <span style={{ fontSize: '9px', textDecoration: 'line-through', color: 'var(--text-secondary)', marginLeft: '4px' }}>${t.price_usd}</span>
+                          </>
+                        ) : (
+                          <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                            ${t.price_usd !== undefined && t.price_usd !== null ? t.price_usd : (t.category === "Matrimonial" ? "1.00" : t.category === "Job Resume" ? "1.50" : "2.00")}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  
+
                   <div className="tmpl-cat-badge" style={{ background: `${CAT_COLORS[t.category]}15`, color: CAT_COLORS[t.category] }}>
                     {t.category}
                   </div>
@@ -475,7 +568,7 @@ export default function TemplateManagement() {
             <div className="modal-body">
               <div className="form-group">
                 <label className="form-label">Category</label>
-                <select 
+                <select
                   className="form-select"
                   value={formData.category}
                   onChange={(e) => {
@@ -497,7 +590,7 @@ export default function TemplateManagement() {
               {modalMode === "add" ? (
                 <div className="form-group">
                   <label className="form-label">Select Template</label>
-                  <select 
+                  <select
                     className="form-select"
                     value={formData.name || ""}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -509,11 +602,11 @@ export default function TemplateManagement() {
                     ))}
                     <option value="custom">Custom Template Slug...</option>
                   </select>
-                  
+
                   {formData.name === "custom" && (
-                    <input 
-                      type="text" 
-                      className="form-input" 
+                    <input
+                      type="text"
+                      className="form-input"
                       style={{ marginTop: '8px' }}
                       placeholder="Enter custom slug (e.g. bold-minimal)"
                       value={customSlug}
@@ -524,9 +617,9 @@ export default function TemplateManagement() {
               ) : (
                 <div className="form-group">
                   <label className="form-label">Template Details</label>
-                  <input 
-                    type="text" 
-                    className="form-input" 
+                  <input
+                    type="text"
+                    className="form-input"
                     value={`${getFriendlyName(formData.name || "", formData.category || "Matrimonial")} (${formData.name})`}
                     disabled
                     style={{ opacity: 0.7 }}
@@ -537,10 +630,10 @@ export default function TemplateManagement() {
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Base Price (₹)</label>
-                  <input 
+                  <input
                     type="text"
                     inputMode="decimal"
-                    className="form-input" 
+                    className="form-input"
                     placeholder="e.g. 99"
                     value={formData.priceStr ?? ""}
                     onChange={(e) => setFormData({ ...formData, priceStr: e.target.value })}
@@ -548,13 +641,38 @@ export default function TemplateManagement() {
                 </div>
                 <div className="form-group">
                   <label className="form-label">Discount Price (₹)</label>
-                  <input 
+                  <input
                     type="text"
                     inputMode="decimal"
-                    className="form-input" 
+                    className="form-input"
                     placeholder="Optional"
                     value={formData.discountPriceStr ?? ""}
                     onChange={(e) => setFormData({ ...formData, discountPriceStr: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Base Price ($)</label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="form-input"
+                    placeholder="e.g. 1.99"
+                    value={formData.priceUSDStr ?? ""}
+                    onChange={(e) => setFormData({ ...formData, priceUSDStr: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Discount Price ($)</label>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    className="form-input"
+                    placeholder="Optional"
+                    value={formData.discountPriceUSDStr ?? ""}
+                    onChange={(e) => setFormData({ ...formData, discountPriceUSDStr: e.target.value })}
                   />
                 </div>
               </div>
@@ -563,17 +681,17 @@ export default function TemplateManagement() {
                 <label className="form-label">Status</label>
                 <div style={{ display: 'flex', gap: '16px' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                    <input 
-                      type="radio" 
-                      name="status" 
+                    <input
+                      type="radio"
+                      name="status"
                       checked={formData.status === "active"}
                       onChange={() => setFormData({ ...formData, status: "active" })}
                     /> Active
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px' }}>
-                    <input 
-                      type="radio" 
-                      name="status" 
+                    <input
+                      type="radio"
+                      name="status"
                       checked={formData.status === "inactive"}
                       onChange={() => setFormData({ ...formData, status: "inactive" })}
                     /> Inactive

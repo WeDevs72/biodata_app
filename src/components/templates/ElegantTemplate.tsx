@@ -62,7 +62,17 @@ export function ElegantTemplate({ data }: { data: Partial<BiodataFormValues> }) 
             <h2 className={`text-sm font-bold uppercase tracking-widest ${theme} bg-emerald-100/50 py-1 px-3 mb-4 rounded-sm border-l-4 ${borderTheme}`}>Family Details</h2>
             <div className="grid grid-cols-[150px_1fr] gap-y-3 px-3 text-[15px]">
               <span className="font-semibold text-emerald-900/80">Father's Name</span> <span>{data.fatherName || "—"}</span>
+              {data.fatherOccupation && (
+                <>
+                  <span className="font-semibold text-emerald-900/80">Father's Occupation</span> <span>{data.fatherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-emerald-900/80">Mother's Name</span> <span>{data.motherName || "—"}</span>
+              {data.motherOccupation && (
+                <>
+                  <span className="font-semibold text-emerald-900/80">Mother's Occupation</span> <span>{data.motherOccupation}</span>
+                </>
+              )}
               <span className="font-semibold text-emerald-900/80">Siblings</span> <span>{data.siblings || "—"}</span>
               {data.familyCustomFields?.map(f => [
                 <span key={`l-${f.id}`} className="font-semibold text-emerald-900/80">{f.label}</span>,

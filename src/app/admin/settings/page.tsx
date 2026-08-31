@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-type TabType = "General" | "Maintenance" | "SEO" | "PDF" | "Social" | "Security";
+type TabType = "General" | "Maintenance" | "SEO" | "PDF" | "Social" | "Security" | "Pricing";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<TabType>("General");
@@ -35,7 +35,13 @@ export default function SettingsPage() {
     watermarkEnabled: true,
     watermarkText: "BioDataEarth.com",
     watermarkPosition: "Center",
-    watermarkOpacity: 25
+    watermarkOpacity: 25,
+    priceMatrimonialINR: 50,
+    priceMatrimonialUSD: 1.00,
+    priceJobINR: 79,
+    priceJobUSD: 1.50,
+    priceBusinessINR: 89,
+    priceBusinessUSD: 2.00,
   });
 
   // Security State
@@ -46,26 +52,51 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("admin_settings");
-    if (saved) {
+    const loadSettings = async () => {
       try {
-        setSettings(prev => ({ ...prev, ...JSON.parse(saved) }));
+        const res = await fetch("/api/admin/settings");
+        if (res.ok) {
+          const data = await res.json();
+          setSettings(prev => ({ ...prev, ...data }));
+        }
       } catch (e) {
-        console.error("Failed to parse settings", e);
+        console.error("Failed to load settings from DB, trying localStorage", e);
+        const saved = localStorage.getItem("admin_settings");
+        if (saved) {
+          try {
+            setSettings(prev => ({ ...prev, ...JSON.parse(saved) }));
+          } catch (err) {
+            console.error("Failed to parse local settings", err);
+          }
+        }
       }
-    }
+    };
+    loadSettings();
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setLoading(true);
-    localStorage.setItem("admin_settings", JSON.stringify(settings));
-
-    // Simulate database delay
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(settings),
+      });
+      if (res.ok) {
+        localStorage.setItem("admin_settings", JSON.stringify(settings));
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      } else {
+        const errData = await res.json();
+        alert("Error saving settings: " + (errData.error || "Unknown error"));
+      }
+    } catch (err: any) {
+      alert("Error saving settings: " + err.message);
+    } finally {
       setLoading(false);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    }, 800);
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
@@ -97,6 +128,7 @@ export default function SettingsPage() {
     { id: "SEO", label: "SEO Settings", icon: Search },
     { id: "PDF", label: "PDF Watermark", icon: FileText },
     { id: "Social", label: "Social Media", icon: Share2 },
+    { id: "Pricing", label: "Pricing Settings", icon: SettingsIcon },
     { id: "Security", label: "Security", icon: Lock },
   ];
 
@@ -372,6 +404,43 @@ export default function SettingsPage() {
             <div className="form-group">
               <label className="form-label">YouTube URL</label>
               <input type="text" className="form-input" value={settings.youtube} onChange={(e) => updateSetting("youtube", e.target.value)} placeholder="https://youtube.com/..." />
+            </div>
+          </div>
+        )}
+
+        {/* TAB 7: PRICING */}
+        {activeTab === "Pricing" && (
+          <div className="section-grid">
+            <div style={{ gridColumn: "span 2" }}>
+              <div style={{ fontWeight: 700, color: 'var(--text-primary)', marginBottom: 2 }}>Dynamic Pricing by Country</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Configure prices for users in India (INR) vs. international users (USD).</div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Matrimonial Price (India - INR)</label>
+              <input type="number" className="form-input" value={settings.priceMatrimonialINR !== undefined ? settings.priceMatrimonialINR : 50} onChange={(e) => updateSetting("priceMatrimonialINR", Number(e.target.value))} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Matrimonial Price (International - USD)</label>
+              <input type="number" step="0.01" className="form-input" value={settings.priceMatrimonialUSD !== undefined ? settings.priceMatrimonialUSD : 1} onChange={(e) => updateSetting("priceMatrimonialUSD", Number(e.target.value))} />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Job Resume Price (India - INR)</label>
+              <input type="number" className="form-input" value={settings.priceJobINR !== undefined ? settings.priceJobINR : 79} onChange={(e) => updateSetting("priceJobINR", Number(e.target.value))} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Job Resume Price (International - USD)</label>
+              <input type="number" step="0.01" className="form-input" value={settings.priceJobUSD !== undefined ? settings.priceJobUSD : 1.5} onChange={(e) => updateSetting("priceJobUSD", Number(e.target.value))} />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Business Price (India - INR)</label>
+              <input type="number" className="form-input" value={settings.priceBusinessINR !== undefined ? settings.priceBusinessINR : 89} onChange={(e) => updateSetting("priceBusinessINR", Number(e.target.value))} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Business Price (International - USD)</label>
+              <input type="number" step="0.01" className="form-input" value={settings.priceBusinessUSD !== undefined ? settings.priceBusinessUSD : 2} onChange={(e) => updateSetting("priceBusinessUSD", Number(e.target.value))} />
             </div>
           </div>
         )}

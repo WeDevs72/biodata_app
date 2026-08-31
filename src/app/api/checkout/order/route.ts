@@ -16,7 +16,7 @@ const razorpay = new Razorpay({
 
 export async function POST(req: Request) {
   try {
-    const { recordId, category } = await req.json();
+    const { recordId, category, currency } = await req.json();
 
     if (!recordId) {
       return NextResponse.json({ error: "Record ID is required" }, { status: 400 });
@@ -35,18 +35,63 @@ export async function POST(req: Request) {
 
     const templateName = record.template_used;
 
-    // Fetch the dynamic price for the template
-    const { data: template, error: templateError } = await supabase
+    // Fetch template price configuration from database
+    const { data: templateRow } = await supabase
       .from('templates')
       .select('price, discount_price')
-      .ilike('name', templateName)   // case-insensitive: slug "classic" matches "Classic"
+      .eq('name', templateName)
       .eq('category', category)
-      .eq('is_active', true)
-      .single();
+      .maybeSingle();
 
+    // Fetch system settings for pricing
+    const { data: settingsRecord } = await supabase
+      .from("biodata_records")
+      .select("data")
+      .eq("name", "__SYSTEM_SETTINGS__")
+      .maybeSingle();
+
+    const settings = settingsRecord?.data || {};
+
+    const currencyUpper = (currency || "INR").toUpperCase();
     let finalPrice = 99; // Default fallback
-    if (!templateError && template) {
-      finalPrice = template.discount_price !== null ? template.discount_price : template.price;
+
+    if (currencyUpper === "USD") {
+      const key = `${templateName}_${category}`;
+      const usdPricing = settings.templatePricesUSD?.[key] || {};
+      let usdPrice = usdPricing.discount_price !== null && usdPricing.discount_price !== undefined 
+        ? usdPricing.discount_price 
+        : usdPricing.price;
+
+      if (usdPrice === null || usdPrice === undefined || isNaN(Number(usdPrice))) {
+        if (category === "Matrimonial") {
+          usdPrice = settings.priceMatrimonialUSD !== undefined ? settings.priceMatrimonialUSD : 1.00;
+        } else if (category === "Job Resume") {
+          usdPrice = settings.priceJobUSD !== undefined ? settings.priceJobUSD : 1.50;
+        } else if (category === "Business") {
+          usdPrice = settings.priceBusinessUSD !== undefined ? settings.priceBusinessUSD : 2.00;
+        } else {
+          usdPrice = 1.00;
+        }
+      }
+      finalPrice = Number(usdPrice);
+    } else {
+      // Default to INR
+      let inrPrice = templateRow 
+        ? (templateRow.discount_price !== null && templateRow.discount_price !== undefined ? templateRow.discount_price : templateRow.price) 
+        : null;
+
+      if (inrPrice === null || inrPrice === undefined || isNaN(Number(inrPrice))) {
+        if (category === "Matrimonial") {
+          inrPrice = settings.priceMatrimonialINR !== undefined ? settings.priceMatrimonialINR : 50;
+        } else if (category === "Job Resume") {
+          inrPrice = settings.priceJobINR !== undefined ? settings.priceJobINR : 79;
+        } else if (category === "Business") {
+          inrPrice = settings.priceBusinessINR !== undefined ? settings.priceBusinessINR : 89;
+        } else {
+          inrPrice = 50;
+        }
+      }
+      finalPrice = Number(inrPrice);
     }
 
     // Receipt must be ≤ 40 characters (Razorpay limit).
@@ -56,8 +101,8 @@ export async function POST(req: Request) {
 
     // Amount should be in paise (₹1 = 100 paise)
     const options = {
-      amount: finalPrice * 100,
-      currency: "INR",
+      amount: Math.round(finalPrice * 100),
+      currency: currencyUpper,
       receipt,
       notes: {
         recordId,

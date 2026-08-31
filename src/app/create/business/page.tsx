@@ -31,30 +31,54 @@ function CreateBusinessContent() {
     ? (templateQuery as string)
     : "classic";
 
-  const savedData = loadBusinessBiodata();
-
   const methods = useForm<BusinessFormValues>({
     resolver: zodResolver(businessSchema),
     defaultValues: {
-      ownerName: savedData?.ownerName ?? "",
-      businessName: savedData?.businessName ?? "",
-      tagline: savedData?.tagline ?? "",
-      phone: savedData?.phone ?? "",
-      email: savedData?.email ?? "",
-      website: savedData?.website ?? "",
-      location: savedData?.location ?? "",
-      industry: savedData?.industry ?? "",
-      established: savedData?.established ?? "",
-      employees: savedData?.employees ?? "",
-      annualTurnover: savedData?.annualTurnover ?? "",
-      gstNumber: savedData?.gstNumber ?? "",
-      offerings: savedData?.offerings ?? [],
-      achievements: savedData?.achievements ?? [],
-      customFields: savedData?.customFields ?? [],
-      photo: savedData?.photo ?? "",
+      ownerName: "",
+      businessName: "",
+      tagline: "",
+      phone: "",
+      email: "",
+      website: "",
+      location: "",
+      industry: "",
+      established: "",
+      employees: "",
+      annualTurnover: "",
+      gstNumber: "",
+      offerings: [],
+      achievements: [],
+      customFields: [],
+      photo: "",
     },
     mode: "onChange",
   });
+
+  // Load saved draft from localStorage on client-side mount to prevent SSR hydration mismatch
+  useEffect(() => {
+    const savedData = loadBusinessBiodata();
+    if (savedData) {
+      methods.reset({
+        ownerName: savedData.ownerName ?? "",
+        businessName: savedData.businessName ?? "",
+        tagline: savedData.tagline ?? "",
+        phone: savedData.phone ?? "",
+        email: savedData.email ?? "",
+        website: savedData.website ?? "",
+        location: savedData.location ?? "",
+        industry: savedData.industry ?? "",
+        established: savedData.established ?? "",
+        employees: savedData.employees ?? "",
+        annualTurnover: savedData.annualTurnover ?? "",
+        gstNumber: savedData.gstNumber ?? "",
+        offerings: savedData.offerings ?? [],
+        achievements: savedData.achievements ?? [],
+        customFields: savedData.customFields ?? [],
+        photo: savedData.photo ?? "",
+        recordId: savedData.recordId,
+      });
+    }
+  }, [methods]);
 
   // Auto-save draft to localStorage (debounced 800ms)
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
