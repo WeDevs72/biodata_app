@@ -17,7 +17,7 @@ export function JobMultiStepForm() {
   const router = useRouter();
   const pathname = usePathname();
   const templateQuery = searchParams.get("template");
-  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium"].includes(templateQuery || "")
+  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium", "ats-minimal", "software-developer", "traditional-biodata"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "professional";
 
@@ -233,6 +233,9 @@ export function JobMultiStepForm() {
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">Choose a Template</label>
                   <div className="grid grid-cols-2 gap-4">
                     {[
+                      { name: "📜 Traditional Bio-Data", slug: "traditional-biodata" },
+                      { name: "💻 Software Developer", slug: "software-developer" },
+                      { name: "🎯 ATS Minimal", slug: "ats-minimal" },
                       { name: "⭐ Executive Premium", slug: "executive-premium" },
                       { name: "Elegant Saffron", slug: "elegant-saffron" },
                       { name: "Classic Professional", slug: "classic-professional" },

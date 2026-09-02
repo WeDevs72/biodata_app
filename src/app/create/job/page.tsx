@@ -27,7 +27,7 @@ function CreateJobContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const templateQuery = searchParams.get("template");
-  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium"].includes(templateQuery || "")
+  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium", "ats-minimal", "software-developer", "traditional-biodata"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "professional";
 

@@ -8,6 +8,9 @@ import { JobModernTemplate } from "@/components/templates/job/JobModernTemplate"
 import { JobClassicProfessionalTemplate } from "@/components/templates/job/JobClassicProfessionalTemplate";
 import { JobElegantSaffronTemplate } from "@/components/templates/job/JobElegantSaffronTemplate";
 import { JobExecutivePremiumTemplate } from "@/components/templates/job/JobExecutivePremiumTemplate";
+import { JobAtsMinimalTemplate } from "@/components/templates/job/JobAtsMinimalTemplate";
+import { JobSoftwareDeveloperTemplate } from "@/components/templates/job/JobSoftwareDeveloperTemplate";
+import { JobTraditionalBiodataTemplate } from "@/components/templates/job/JobTraditionalBiodataTemplate";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 import { Download, Loader2, AlertCircle } from "lucide-react";
@@ -75,7 +78,7 @@ export function JobLivePreview() {
 
   const searchParams = useSearchParams();
   const templateQuery = searchParams.get("template");
-  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium"].includes(templateQuery || "")
+  const template = ["professional", "modern", "classic-professional", "elegant-saffron", "executive-premium", "ats-minimal", "software-developer", "traditional-biodata"].includes(templateQuery || "")
     ? (templateQuery as string)
     : "professional";
 
@@ -103,15 +106,15 @@ export function JobLivePreview() {
         .eq('name', template)
         .eq('category', 'Job Resume')
         .single();
-      
+
       if (error) {
         console.error("Error fetching template price:", error.message);
       }
-      
+
       if (data) {
         console.log("Fetched price:", data);
-        setTemplatePrice({ 
-          price: data.price, 
+        setTemplatePrice({
+          price: data.price,
           discount_price: data.discount_price,
           price_usd: data.price_usd,
           discount_price_usd: data.discount_price_usd
@@ -123,6 +126,9 @@ export function JobLivePreview() {
 
   const renderTemplate = (data: Partial<JobFormValues>) => {
     switch (template) {
+      case "traditional-biodata": return <JobTraditionalBiodataTemplate data={data} />;
+      case "software-developer": return <JobSoftwareDeveloperTemplate data={data} />;
+      case "ats-minimal": return <JobAtsMinimalTemplate data={data} />;
       case "executive-premium": return <JobExecutivePremiumTemplate data={data} />;
       case "elegant-saffron": return <JobElegantSaffronTemplate data={data} />;
       case "classic-professional": return <JobClassicProfessionalTemplate data={data} />;
@@ -203,7 +209,7 @@ export function JobLivePreview() {
       return;
     }
     if (!pdfTargetRef.current) return;
-    
+
     if (!formValues.recordId) {
       setValidationError("Please save your resume before downloading.");
       return;
@@ -213,7 +219,7 @@ export function JobLivePreview() {
     try {
       // 1. Check if already paid
       const { paid } = await checkPaymentStatus(formValues.recordId);
-      
+
       if (!paid) {
         // 2. Trigger Razorpay if not paid
         await initiatePayment(formValues.recordId);
@@ -233,10 +239,10 @@ export function JobLivePreview() {
         pdfTargetRef.current,
         `resume-${formValues.fullName?.replace(/\s+/g, "_") || "download"}.pdf`
       );
-      
+
       // 5. Update download flag in database
       await markAsDownloaded(formValues.recordId);
-      
+
     } catch (err: any) {
       console.error("PDF download/payment error:", err);
       const msg = err?.message || "";
@@ -298,7 +304,7 @@ export function JobLivePreview() {
 
             {/* 70% blur from below for unpaid previews */}
             {!isPaid && (
-              <div 
+              <div
                 className="absolute left-0 right-0 bottom-0 pointer-events-none"
                 style={{
                   height: "70%",

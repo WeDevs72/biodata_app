@@ -30,6 +30,9 @@ export const metadata: Metadata = {
 };
 
 const templates = [
+  { name: "Traditional Bio-Data", slug: "traditional-biodata", color: "from-gray-800 to-black", emoji: "📜" },
+  { name: "Software Developer", slug: "software-developer", color: "from-indigo-600 to-slate-900", emoji: "💻" },
+  { name: "ATS Minimal", slug: "ats-minimal", color: "from-slate-800 to-black", emoji: "🎯" },
   { name: "Executive Premium", slug: "executive-premium", color: "from-slate-700 to-slate-900", emoji: "💼" },
   { name: "Elegant Saffron", slug: "elegant-saffron", color: "from-amber-500 to-orange-600", emoji: "✨" },
   { name: "Classic Professional", slug: "classic-professional", color: "from-blue-700 to-indigo-700", emoji: "🎓" },

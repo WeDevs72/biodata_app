@@ -50,6 +50,9 @@ const TEMPLATE_NAMES: Record<string, string> = {
   "elegant_Matrimonial": "Elegant Emerald",
   "royal_Matrimonial": "Royal Purple",
   // Job Resume
+  "traditional-biodata_Job Resume": "Traditional Bio-Data",
+  "software-developer_Job Resume": "Software Developer",
+  "ats-minimal_Job Resume": "ATS Minimal",
   "professional_Job Resume": "Professional",
   "modern_Job Resume": "Modern",
   "executive-premium_Job Resume": "Executive Premium",
@@ -85,6 +88,9 @@ const PREDEFINED_SLUGS: Record<Category, { slug: string; label: string }[]> = {
     { slug: "royal", label: "Royal Purple" },
   ],
   "Job Resume": [
+    { slug: "traditional-biodata", label: "Traditional Bio-Data" },
+    { slug: "software-developer", label: "Software Developer" },
+    { slug: "ats-minimal", label: "ATS Minimal" },
     { slug: "professional", label: "Professional" },
     { slug: "modern", label: "Modern" },
     { slug: "executive-premium", label: "Executive Premium" },

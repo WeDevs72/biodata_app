@@ -23,6 +23,9 @@ import { JobModernTemplate } from "@/components/templates/job/JobModernTemplate"
 import { JobClassicProfessionalTemplate } from "@/components/templates/job/JobClassicProfessionalTemplate";
 import { JobElegantSaffronTemplate } from "@/components/templates/job/JobElegantSaffronTemplate";
 import { JobExecutivePremiumTemplate } from "@/components/templates/job/JobExecutivePremiumTemplate";
+import { JobAtsMinimalTemplate } from "@/components/templates/job/JobAtsMinimalTemplate";
+import { JobSoftwareDeveloperTemplate } from "@/components/templates/job/JobSoftwareDeveloperTemplate";
+import { JobTraditionalBiodataTemplate } from "@/components/templates/job/JobTraditionalBiodataTemplate";
 
 // Business templates
 import { BusinessClassicTemplate } from "@/components/templates/business/BusinessClassicTemplate";
@@ -124,6 +127,9 @@ const TAB_CATEGORIES = [
     accent: "from-indigo-500 to-violet-600",
     createHref: "/create/job",
     templates: [
+      { name: "Traditional Bio-Data", slug: "traditional-biodata", Component: JobTraditionalBiodataTemplate, data: jobData },
+      { name: "Software Developer", slug: "software-developer", Component: JobSoftwareDeveloperTemplate, data: jobData },
+      { name: "ATS Minimal", slug: "ats-minimal", Component: JobAtsMinimalTemplate, data: jobData },
       { name: "Executive Premium", slug: "executive-premium", Component: JobExecutivePremiumTemplate, data: jobData },
       { name: "Elegant Saffron", slug: "elegant-saffron", Component: JobElegantSaffronTemplate, data: jobData },
       { name: "Classic Professional", slug: "classic-professional", Component: JobClassicProfessionalTemplate, data: jobData },
@@ -358,8 +364,6 @@ export default function Home() {
                   <span>Business Profile</span>
                 </button>
               </motion.div>
-
-
 
             </motion.div>
 
